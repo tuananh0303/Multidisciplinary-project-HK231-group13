@@ -1,1 +1,2 @@
-# Multidisciplinary-project-HK231-group13
+Đồ Án Đa Ngành 
+Chủ đề: Hệ thống ngôi nhà thông minh
