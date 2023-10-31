@@ -26,7 +26,7 @@ a {
     display: flex;
     flex-direction: column;
     align-items: center;
-    height: 38rem;
+    // height: 38rem;
     margin-top: 10rem;
     border-radius: 8px;
     position: fixed;
@@ -43,16 +43,19 @@ a {
     width: 30rem;
 }
 
-.btn-login {
+.name {
+    display: flex;
+    justify-content: space-between;
+}
+
+.btn {
     width: var(--width-form);
     height: 3rem;
     display: flex;
-    margin-top: 30px;
 }
 
 .footer {
     width: var(--width-form);
-    margin-top: 8px;
     display: flex;
     justify-content: space-between;
     color: #000;
@@ -64,7 +67,7 @@ a {
     font-size: 1.6rem;
     align-items: last baseline;
     font-weight: 300;
-    margin-top: 1.2rem;
+    margin: 1.2rem 0 2rem;
 }
 
 .title-3 {
