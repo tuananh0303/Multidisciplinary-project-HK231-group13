@@ -34,6 +34,7 @@ function Login() {
                             })
                         }
                     />
+                    {console.log(username)}
                     <TextField
                         label="Password"
                         fullWidth
