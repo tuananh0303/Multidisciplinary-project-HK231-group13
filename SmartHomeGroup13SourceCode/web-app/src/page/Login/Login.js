@@ -2,9 +2,18 @@ import { Button, TextField } from '@mui/material';
 import styles from './Login.scss';
 import classNames from 'classnames/bind';
 import Checkbox from '@mui/material/Checkbox';
+import { useState } from 'react';
 
 const cx = classNames.bind(styles);
 function Login() {
+    const [username, setUsername] = useState('');
+    const [password, setPassword] = useState('');
+    const handdleInputUsername = (e) => {
+        return setUsername(e.target.value);
+    };
+    const handdleInputPassword = (e) => {
+        return setPassword(e.target.value);
+    };
     return (
         <div className={cx('wrapper')}>
             <img src={require('../../assets/img/home.png')} alt="BG" className={cx('background')} />
@@ -17,6 +26,7 @@ function Login() {
                         fullWidth
                         variant="filled"
                         size="normal"
+                        onChange={handdleInputUsername}
                         sx={
                             ({ input: { fontSize: '1.4rem', padding: '20px 12px 4px' } },
                             {
@@ -31,6 +41,7 @@ function Login() {
                         variant="filled"
                         size="normal"
                         margin="normal"
+                        onChange={handdleInputPassword}
                         sx={
                             ({ input: { fontSize: '1.4rem', padding: '20px 12px 4px' } },
                             {
@@ -62,7 +73,7 @@ function Login() {
                 </div>
                 <div className={cx('signup')}>
                     <p className={cx('title-3')}>Need an account?</p>
-                    <a href={'/'}>Sign up</a>
+                    <a href={'/signup'}>Sign up</a>
                 </div>
             </div>
         </div>

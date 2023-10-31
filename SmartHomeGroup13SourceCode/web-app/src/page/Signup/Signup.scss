@@ -20,13 +20,12 @@ a {
     flex-shrink: 0;
 }
 
-.form {
+.form-signup {
     background-color: #fff;
     width: 36rem;
     display: flex;
     flex-direction: column;
     align-items: center;
-    // height: 38rem;
     margin-top: 10rem;
     border-radius: 8px;
     position: fixed;
@@ -39,10 +38,6 @@ a {
     color: #000;
 }
 
-.input {
-    width: 30rem;
-}
-
 .name {
     display: flex;
     justify-content: space-between;
@@ -51,7 +46,6 @@ a {
 .btn {
     width: var(--width-form);
     height: 3rem;
-    display: flex;
 }
 
 .footer {
@@ -60,16 +54,11 @@ a {
     justify-content: space-between;
     color: #000;
 }
-
-.signup {
+.login {
     display: flex;
     justify-content: center;
     font-size: 1.6rem;
     align-items: last baseline;
     font-weight: 300;
     margin: 1.2rem 0 2rem;
-}
-
-.title-3 {
-    margin-right: 4px;
 }
