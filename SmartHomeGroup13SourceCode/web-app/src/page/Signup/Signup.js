@@ -1,9 +1,36 @@
 import { Button, TextField } from '@mui/material';
 import styles from './Signup.scss';
 import classNames from 'classnames/bind';
+import { useState } from 'react';
 
 const cx = classNames.bind(styles);
 function Signup() {
+    const [firstname, setFirstname] = useState('');
+    const [lastname, setLastname] = useState('');
+    const [username, setUsername] = useState('');
+    const [password, setPassword] = useState('');
+    const [email, setEmail] = useState('');
+    const [phone, setPhone] = useState('');
+
+    const handleInputUsername = (e) => {
+        setUsername(e.target.value);
+    };
+    const handleInputFirstname = (e) => {
+        setFirstname(e.target.value);
+    };
+    const handleInputLastname = (e) => {
+        setLastname(e.target.value);
+    };
+    const handleInputPassword = (e) => {
+        setPassword(e.target.value);
+    };
+    const handleInputEmail = (e) => {
+        setEmail(e.target.value);
+    };
+    const handleInputPhone = (e) => {
+        setPhone(e.target.value);
+    };
+
     return (
         <div className={cx('wrapper')}>
             <img src={require('../../assets/img/home.png')} alt="BG" className={cx('background')} />
@@ -22,7 +49,9 @@ function Signup() {
                                     '& label': { fontSize: '1.4rem' },
                                 })
                             }
+                            onChange={handleInputFirstname}
                         />
+                        {console.log(firstname)}
                         <TextField
                             label="Last Name"
                             type="text"
@@ -34,7 +63,9 @@ function Signup() {
                                     '& label': { fontSize: '1.4rem' },
                                 })
                             }
+                            onChange={handleInputLastname}
                         />
+                        {console.log(lastname)}
                     </div>
                     <TextField
                         label="Username"
@@ -51,7 +82,9 @@ function Signup() {
                         InputLabelProps={{
                             style: { fontSize: 14 }, // Set font size here
                         }}
+                        onChange={handleInputUsername}
                     />
+                    {console.log(username)}
                     <TextField
                         label="Password"
                         fullWidth
@@ -67,7 +100,9 @@ function Signup() {
                         InputLabelProps={{
                             style: { fontSize: 14 }, // Set font size here
                         }}
+                        onChange={handleInputPassword}
                     />
+                    {console.log(password)}
                     <TextField
                         label="Email"
                         fullWidth
@@ -83,7 +118,9 @@ function Signup() {
                         InputLabelProps={{
                             style: { fontSize: 14 }, // Set font size here
                         }}
+                        onChange={handleInputEmail}
                     />
+                    {console.log(email)}
                     <TextField
                         label="Phone"
                         fullWidth
@@ -99,7 +136,9 @@ function Signup() {
                         InputLabelProps={{
                             style: { fontSize: 14 }, // Set font size here
                         }}
+                        onChange={handleInputPhone}
                     />
+                    {console.log(phone)}
                 </div>
                 <Button className={cx('btn')} variant="contained" disableElevation size="small" sx={{ marginTop: 2 }}>
                     Sign up

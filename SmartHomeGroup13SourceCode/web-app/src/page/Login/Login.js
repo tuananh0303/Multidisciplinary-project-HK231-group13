@@ -3,15 +3,16 @@ import styles from './Login.scss';
 import classNames from 'classnames/bind';
 import Checkbox from '@mui/material/Checkbox';
 import { useState } from 'react';
+import { Link } from 'react-router-dom';
 
 const cx = classNames.bind(styles);
 function Login() {
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
-    const handdleInputUsername = (e) => {
+    const handleInputUsername = (e) => {
         return setUsername(e.target.value);
     };
-    const handdleInputPassword = (e) => {
+    const handleInputPassword = (e) => {
         return setPassword(e.target.value);
     };
     return (
@@ -26,7 +27,7 @@ function Login() {
                         fullWidth
                         variant="filled"
                         size="normal"
-                        onChange={handdleInputUsername}
+                        onChange={handleInputUsername}
                         sx={
                             ({ input: { fontSize: '1.4rem', padding: '20px 12px 4px' } },
                             {
@@ -42,7 +43,7 @@ function Login() {
                         variant="filled"
                         size="normal"
                         margin="normal"
-                        onChange={handdleInputPassword}
+                        onChange={handleInputPassword}
                         sx={
                             ({ input: { fontSize: '1.4rem', padding: '20px 12px 4px' } },
                             {
@@ -53,28 +54,31 @@ function Login() {
                             })
                         }
                     />
+                    {console.log(password)}
                 </div>
-                <Button
-                    className={cx('btn-login')}
-                    variant="contained"
-                    disableElevation
-                    size="small"
-                    sx={{ margin: 2 }}
-                >
-                    Login
-                </Button>
+                <Link to={'/MyDashBoard'}>
+                    <Button
+                        className={cx('btn-login')}
+                        variant="contained"
+                        disableElevation
+                        size="small"
+                        sx={{ margin: 2 }}
+                    >
+                        Login
+                    </Button>
+                </Link>
                 <div className={cx('footer')}>
                     <div className={cx('checkbox')}>
                         <Checkbox label="Remember Me" defaultChecked />
                         Remember Me
                     </div>
-                    <a href="/" className={cx('forgot')}>
+                    <Link to="/" className={cx('forgot')}>
                         Forgot Password
-                    </a>
+                    </Link>
                 </div>
                 <div className={cx('signup')}>
                     <p className={cx('title-3')}>Need an account?</p>
-                    <a href={'/signup'}>Sign up</a>
+                    <Link to={'/signup'}>Sign up</Link>
                 </div>
             </div>
         </div>
