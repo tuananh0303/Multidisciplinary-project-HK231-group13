@@ -2,6 +2,7 @@ import { Button, TextField } from '@mui/material';
 import styles from './Signup.scss';
 import classNames from 'classnames/bind';
 import { useState } from 'react';
+import { Link } from 'react-router-dom';
 
 const cx = classNames.bind(styles);
 function Signup() {
@@ -140,9 +141,17 @@ function Signup() {
                     />
                     {console.log(phone)}
                 </div>
-                <Button className={cx('btn')} variant="contained" disableElevation size="small" sx={{ marginTop: 2 }}>
-                    Sign up
-                </Button>
+                <Link to={'/MyDashboard'}>
+                    <Button
+                        className={cx('btn')}
+                        variant="contained"
+                        disableElevation
+                        size="small"
+                        sx={{ marginTop: 2 }}
+                    >
+                        Sign up
+                    </Button>
+                </Link>
                 <div className={cx('login')}>
                     <a href={'/login'}>Log in</a>
                 </div>
