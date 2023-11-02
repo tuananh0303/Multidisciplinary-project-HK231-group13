@@ -6,6 +6,7 @@ import DashBoardContent from './page/User/DashBoardContent/DashBoardContent';
 import StaticContent from './page/User/StaticContent/StaticContent';
 import SupportContent from './page/User/SupportContent/SupportContent';
 import SettingContent from './page/User/SettingContent/SettingContent';
+import ProfileContent from './page/User/ProfileContent/ProfileContent';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 function App() {
     return (
@@ -16,6 +17,7 @@ function App() {
                     <Route path="Static" element={<StaticContent />} />
                     <Route path="Setting" element={<SettingContent />} />
                     <Route path="Support" element={<SupportContent />} />
+                    <Route path="Profile" element={<ProfileContent />} />
                 </Route>
                 <Route path="/signup" element={<Signup />} />
                 <Route path="/login" element={<Login />} />
