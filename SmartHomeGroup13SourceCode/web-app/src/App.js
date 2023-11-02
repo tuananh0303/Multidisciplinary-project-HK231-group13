@@ -11,6 +11,7 @@ function App() {
     return (
         <BrowserRouter>
             <Routes>
+                {/* <Route path="/" element={<Login/>}/> */}
                 <Route path="/MyDashBoard" element={<MyDashBoard />}>
                     <Route path="DashBoard" element={<DashBoardContent />} />
                     <Route path="Static" element={<StaticContent />} />
