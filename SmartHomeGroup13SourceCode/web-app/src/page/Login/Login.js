@@ -56,7 +56,7 @@ function Login() {
                     />
                     {console.log(password)}
                 </div>
-                <Link to={'/MyDashBoard'}>
+                <Link to={'/MyDashBoard/DashBoard'}>
                     <Button
                         className={cx('btn-login')}
                         variant="contained"
