@@ -15,6 +15,9 @@ import ThermostatIcon from '@mui/icons-material/Thermostat';
 import WaterIcon from '@mui/icons-material/Water';
 import MapsHomeWorkIcon from '@mui/icons-material/MapsHomeWork';
 import DevicesIcon from '@mui/icons-material/Devices';
+import { getControlDoorData, getControlFanData, getControlLampData, getLight, getTempData, getHumidData } from './getDataApi';
+import { ACTIVE_KEY, USER_NAME } from '../../../const/adafruitConst';
+import WbIncandescentIcon from '@mui/icons-material/WbIncandescent';
 const DashBoardContent = () => {
     let valueSensorId = '';
     let valueDeviceName = '';
@@ -59,6 +62,7 @@ const DashBoardContent = () => {
             onCancel() {},
         });
     };
+    // let humidity = '100'
     let valueAddRoom = '';
     const AddRoom = () => {
         Modal.confirm({
@@ -83,8 +87,6 @@ const DashBoardContent = () => {
             onCancel() {},
         });
     };
-    const temperature = 32;
-    const humidity = 1.2;
     const config = {
         data,
         xField: 'type',
@@ -122,6 +124,83 @@ const DashBoardContent = () => {
 
     const [room, setRoom] = useState(rooms[0]);
 
+
+    /// Call API to display and update data
+    const username = USER_NAME;
+    const activeKey = ACTIVE_KEY;
+    const [lampData, setLampData] = useState(null);
+    const [doorData, setDoorData] = useState(null);
+    const [fanData, setFanData] = useState(null);
+
+    const [lightData, setLightData] = useState(null);
+    const [tempData, setTempData] = useState(null);
+    const [humiData, setHumiData] = useState(null);
+
+    useEffect(() => {
+        const fetchData = async () => {
+            
+            const lamp = await getControlLampData(username, activeKey);
+            setLampData(lamp);
+
+            const fan = await getControlFanData(username, activeKey);
+            setFanData(fan);
+
+            const door = await getControlDoorData(username, activeKey);
+            setDoorData(door);  
+
+            const light = await getLight(username, activeKey);
+            setLightData(light);
+
+            const temp = await getTempData(username, activeKey);
+            setTempData(temp);
+
+            const humi = await getHumidData(username, activeKey);
+            setHumiData(humi);
+        };
+        
+        fetchData();
+    }, [username, activeKey]);
+
+    //update status
+    // const [fanStatus, setFanStatus] = useState(); 
+    // const [switchValue, setSwitchValue] = useState();
+    // const updateFanStatus = async (newStatus) => {
+    //     try {
+    //         const data = {
+    //             value: newStatus
+    //         };
+        
+    //         const apiUrl = `https://io.adafruit.com/api/v2/${username}/feeds/control-fan/data`;
+    //         const response = await fetch(apiUrl, {
+    //             method: 'POST',
+    //             headers: {
+    //             'Content-Type': 'application/json',
+    //             'X-AIO-Key': activeKey
+    //             },
+    //             body: JSON.stringify(data)
+    //         });
+        
+    //         if (response.status === 200) { 
+    //             setFanStatus(newStatus);
+    //             console.log('Cập nhật thành công!');
+    //         } else {
+            
+    //             console.error(`Lỗi: ${response.status}`);
+    //         }
+    //         } catch (error) {
+    //         console.error('Lỗi khi gửi yêu cầu:', error);
+    //         }
+    //     };    
+        // end update status
+
+        // useEffect(() => {
+        //     if (switchValue) {
+        //         updateFanStatus('online');
+        //     } else {
+        //         updateFanStatus('offline');
+        //     }
+        // }, [switchValue]);
+    
     return (
         <div style={{ width: '100%', boxSizing: 'border-box' }}>
             {/* Notify */}
@@ -152,7 +231,7 @@ const DashBoardContent = () => {
                                     setRoom(r);
                                 }}
                             >
-                                {r.roomName}
+                                Living Room
                             </Button>
                         );
                     })}
@@ -175,71 +254,100 @@ const DashBoardContent = () => {
                 </Space>
             </Flex>
             {/* Device list */}
-            <Typography style={{ fontWeight: '500', margin: '0' }}>{room.roomName}</Typography>
-            <Space wrap style={{ width: '100%', padding: '1%', marginTop: '2%' }}>
-                {room.device.map((devices) => {
-                    let icon;
-                    let sensorData = sensor.find((sensors) => {
-                        return sensors.Id === devices.sensorID;
-                    });
-                    if (devices.deviceName === 'light') {
-                        icon = <TipsAndUpdatesIcon fontSize="large" style={{ marginLeft: '10%' }} />;
-                    } else if (devices.deviceName === 'fan') {
-                        icon = <WindPowerIcon fontSize="large" style={{ marginLeft: '10%' }} />;
-                    } else {
-                        icon = <DoorFrontIcon fontSize="large" style={{ marginLeft: '10%' }} />;
-                    }
+                
 
-                    return (
-                        <>
-                            <Space.Compact
-                                direction="vertical"
-                                style={{
-                                    width: '100%',
-                                    height: '150px',
-                                    border: '2px solid black',
-                                    borderRadius: '10px',
-                                    padding: '3%',
-                                    backgroundColor: '#f2f0f0',
-                                    margin: '4% 10%',
-                                    display: 'block',
-                                }}
-                            >
-                                <Space style={{ display: 'block', height: '90px' }}>
-                                    <Flex
-                                        justify="space-between"
-                                        align="flex-center"
-                                        style={{ padding: '1%', width: '100%' }}
-                                    >
-                                        <Space direction="vertical">
-                                            {icon}
-                                            <Typography>{devices.deviceName}</Typography>
-                                        </Space>
-                                        <Space>
-                                            <Switch
-                                                defaultChecked={sensorData.status}
-                                                onClick={(checked, event) => {
-                                                    sensorData.status = !sensorData.status;
-                                                }}
-                                            />
-                                        </Space>
-                                    </Flex>
-                                </Space>
-                                <Space style={{ height: '20px', padding: '1%', width: '16vw' }}>
-                                    <Slider
-                                        defaultValue={sensorData.data}
-                                        style={{ display: 'block', width: '13vw', padding: '1%' }}
-                                        Tooltip={{ open: true }}
-                                        onChange={(value) => {
-                                            sensorData.data = value;
-                                        }}
-                                    />
-                                </Space>
-                            </Space.Compact>
-                            <div style={{ width: '1rem' }}></div>
-                        </>
-                    );
-                })}
+            <Typography style={{ fontWeight: '500', margin: '0' }}>Living Room</Typography>
+            <Space wrap style={{ width: '100%', padding: '1%', marginTop: '2%' }}>
+                <Space.Compact
+                    direction="vertical"
+                    style={{
+                        width: '100%',
+                        height: '150px',
+                        border: '2px solid black',
+                        borderRadius: '10px',
+                        padding: '3%',
+                        backgroundColor: '#f2f0f0',
+                        margin: '4% 10%',
+                        display: 'block',
+                    }}
+                >
+                    <Space style={{ display: 'block', height: '70px' }}>
+                        <Flex justify="space-between" align="flex-center" style={{ padding: '1%', width: '10vw' }}>
+                            <Space direction="vertical">
+                                <TipsAndUpdatesIcon fontSize="large" />
+                                <Typography style={{fontSize: '23px', fontStyle: 'bold'}}>Lamp</Typography>
+                            </Space>
+                            <Space>
+                                <Switch
+                                    style={{marginRight: '10px'}}
+                                    checked={lampData?.last_value}
+                                    onClick={(checked, event) => {}}
+
+                                />
+                            </Space>
+                        </Flex>
+                    </Space>
+                </Space.Compact>
+
+                <Space.Compact
+                    direction="vertical"
+                    style={{
+                        width: '100%',
+                        height: '150px',
+                        border: '2px solid black',
+                        borderRadius: '10px',
+                        padding: '3%',
+                        backgroundColor: '#f2f0f0',
+                        margin: '4% 10%',
+                        display: 'block',
+                    }}
+                >
+                    <Space style={{ display: 'block', height: '70px' }}>
+                        <Flex justify="space-between" align="flex-center" style={{ padding: '1%', width: '10vw' }}>
+                            <Space direction="vertical">
+                            <WindPowerIcon fontSize="large" style={{ marginLeft: '10%' }} />
+                                <Typography style={{fontSize: '23px', fontStyle: 'bold'}}>Fan</Typography>
+                            </Space>
+                            <Space>
+                                <Switch
+                                    style={{marginRight: '10px'}}
+                                    checked={fanData?.last_value} 
+                                    // onChange={checked => setSwitchValue(checked)}                 
+                                />
+                            </Space>
+                        </Flex>
+                    </Space>
+                </Space.Compact>
+
+                <Space.Compact
+                    direction="vertical"
+                    style={{
+                        width: '100%',
+                        height: '150px',
+                        border: '2px solid black',
+                        borderRadius: '10px',
+                        padding: '3%',
+                        backgroundColor: '#f2f0f0',
+                        margin: '4% 10%',
+                        display: 'block',
+                    }}
+                >
+                    <Space style={{ display: 'block', height: '70px' }}>
+                        <Flex justify="space-between" align="flex-center" style={{ padding: '1%', width: '10vw' }}>
+                            <Space direction="vertical">
+                            <DoorFrontIcon fontSize="large" style={{ marginLeft: '10%' }} />
+                                <Typography style={{fontSize: '23px', fontStyle: 'bold'}}>Door</Typography>
+                            </Space>
+                            <Space>
+                                <Switch
+                                    style={{marginRight: '10px'}}
+                                    checked={doorData?.last_value}
+                                    onClick={(checked, event) => {}}
+                                />
+                            </Space>
+                        </Flex>
+                    </Space>
+                </Space.Compact>
             </Space>
             {/* OverView and Chart */}
             <Space wrap style={{ marginTop: '1%', width: '100%' }}>
@@ -264,12 +372,17 @@ const DashBoardContent = () => {
                         <Space>
                             <ThermostatIcon fontSize="large" />
                             <Typography style={{ fontSize: '1.5rem', fontWeight: '500' }}>
-                                {temperature}&deg;C
+                                {tempData?.last_value}&deg;C
                             </Typography>
                         </Space>
+                        
                         <Space>
                             <WaterIcon fontSize="large" />
-                            <Typography style={{ fontSize: '1.5rem', fontWeight: '500' }}>{humidity}%</Typography>
+                            <Typography style={{ fontSize: '1.5rem', fontWeight: '500' }}>{humiData?.last_value}%</Typography>
+                        </Space>
+                        <Space>
+                            <WbIncandescentIcon fontSize="large" />
+                            <Typography style={{ fontSize: '1.5rem', fontWeight: '500' }}>{lightData?.last_value}%</Typography>
                         </Space>
                     </Flex>
                 </Space.Compact>
@@ -286,13 +399,6 @@ const DashBoardContent = () => {
                     <Column {...config} style={{ width: '100%' }} />
                 </Space.Compact>
             </Space>
-            <Button
-                onClick={() => {
-                    console.log(rooms);
-                }}
-            >
-                daskjdhas
-            </Button>
         </div>
     );
 };
