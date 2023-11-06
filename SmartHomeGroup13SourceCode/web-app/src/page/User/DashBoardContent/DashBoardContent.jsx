@@ -162,45 +162,127 @@ const DashBoardContent = () => {
     }, [username, activeKey]);
 
     //update status
-    // const [fanStatus, setFanStatus] = useState(); 
-    // const [switchValue, setSwitchValue] = useState();
-    // const updateFanStatus = async (newStatus) => {
-    //     try {
-    //         const data = {
-    //             value: newStatus
-    //         };
+    //lamp 
+    const [lampStatus, setLampStatus] = useState(lampData?.last_value); 
+    const [switchValueLamp, setSwitchValueLamp] = useState();
+    const updateLampStatus = async (newStatus) => {
+        try {
+            const data = {
+                value: newStatus
+            };
         
-    //         const apiUrl = `https://io.adafruit.com/api/v2/${username}/feeds/control-fan/data`;
-    //         const response = await fetch(apiUrl, {
-    //             method: 'POST',
-    //             headers: {
-    //             'Content-Type': 'application/json',
-    //             'X-AIO-Key': activeKey
-    //             },
-    //             body: JSON.stringify(data)
-    //         });
+            const apiUrl = `https://io.adafruit.com/api/v2/${username}/feeds/control-lamp/data`;
+            const response = await fetch(apiUrl, {
+                method: 'POST',
+                headers: {
+                'Content-Type': 'application/json',
+                'X-AIO-Key': activeKey
+                },
+                body: JSON.stringify(data)
+            });
         
-    //         if (response.status === 200) { 
-    //             setFanStatus(newStatus);
-    //             console.log('Cập nhật thành công!');
-    //         } else {
+            if (response.status === 200) { 
+                setLampStatus(newStatus);
+                console.log('Cập nhật thành công!');
+            } else {
             
-    //             console.error(`Lỗi: ${response.status}`);
-    //         }
-    //         } catch (error) {
-    //         console.error('Lỗi khi gửi yêu cầu:', error);
-    //         }
-    //     };    
-        // end update status
+                console.error(`Lỗi: ${response.status}`);
+            }
+            } catch (error) {
+            console.error('Lỗi khi gửi yêu cầu:', error);
+            }
+        };    
+        
 
-        // useEffect(() => {
-        //     if (switchValue) {
-        //         updateFanStatus('online');
-        //     } else {
-        //         updateFanStatus('offline');
-        //     }
-        // }, [switchValue]);
-    
+        useEffect(() => {
+            if (switchValueLamp) {
+                updateLampStatus(1);
+            } else {
+                updateLampStatus(0);
+            }
+        }, [switchValueLamp]);
+    //fan
+    const [fanStatus, setFanStatus] = useState(fanData?.last_value); 
+    const [switchValueFan, setSwitchValueFan] = useState();
+    const updateFanStatus = async (newStatus) => {
+        try {
+            const data = {
+                value: newStatus
+            };
+        
+            const apiUrl = `https://io.adafruit.com/api/v2/${username}/feeds/control-fan/data`;
+            const response = await fetch(apiUrl, {
+                method: 'POST',
+                headers: {
+                'Content-Type': 'application/json',
+                'X-AIO-Key': activeKey
+                },
+                body: JSON.stringify(data)
+            });
+        
+            if (response.status === 200) { 
+                setFanStatus(newStatus);
+                console.log('Cập nhật thành công!');
+            } else {
+            
+                console.error(`Lỗi: ${response.status}`);
+            }
+            } catch (error) {
+            console.error('Lỗi khi gửi yêu cầu:', error);
+            }
+        };    
+        
+
+        useEffect(() => {
+            if (switchValueFan) {
+                updateFanStatus(70);
+            } else {
+                updateFanStatus(0);
+            }
+        }, [switchValueFan]);
+
+    //door
+    const [doorStatus, setDoorStatus] = useState(fanData?.last_value); 
+    const [switchValueDoor, setSwitchValueDoor] = useState();
+    const updateDoorStatus = async (newStatus) => {
+        try {
+            const data = {
+                value: newStatus
+            };
+        
+            const apiUrl = `https://io.adafruit.com/api/v2/${username}/feeds/control-door/data`;
+            const response = await fetch(apiUrl, {
+                method: 'POST',
+                headers: {
+                'Content-Type': 'application/json',
+                'X-AIO-Key': activeKey
+                },
+                body: JSON.stringify(data)
+            });
+        
+            if (response.status === 200) { 
+                setDoorStatus(newStatus);
+                console.log('Cập nhật thành công!');
+            } else {
+            
+                console.error(`Lỗi: ${response.status}`);
+            }
+            } catch (error) {
+            console.error('Lỗi khi gửi yêu cầu:', error);
+            }
+        };    
+        
+
+        useEffect(() => {
+            if (switchValueDoor) {
+                updateFanStatus(70);
+            } else {
+                updateFanStatus(0);
+            }
+        }, [switchValueDoor]);
+    // end update status
+
+
     return (
         <div style={{ width: '100%', boxSizing: 'border-box' }}>
             {/* Notify */}
@@ -280,8 +362,8 @@ const DashBoardContent = () => {
                             <Space>
                                 <Switch
                                     style={{marginRight: '10px'}}
-                                    checked={lampData?.last_value}
-                                    onClick={(checked, event) => {}}
+                                    defaultChecked={switchValueLamp} 
+                                    onChange={checked => setSwitchValueLamp(checked)}  
 
                                 />
                             </Space>
@@ -311,8 +393,8 @@ const DashBoardContent = () => {
                             <Space>
                                 <Switch
                                     style={{marginRight: '10px'}}
-                                    checked={fanData?.last_value} 
-                                    // onChange={checked => setSwitchValue(checked)}                 
+                                    defaultChecked={switchValueFan} 
+                                    onChange={checked => setSwitchValueFan(checked)}                
                                 />
                             </Space>
                         </Flex>
@@ -341,8 +423,8 @@ const DashBoardContent = () => {
                             <Space>
                                 <Switch
                                     style={{marginRight: '10px'}}
-                                    checked={doorData?.last_value}
-                                    onClick={(checked, event) => {}}
+                                    defaultChecked={switchValueDoor} 
+                                    onChange={checked => setSwitchValueDoor(checked)} 
                                 />
                             </Space>
                         </Flex>
