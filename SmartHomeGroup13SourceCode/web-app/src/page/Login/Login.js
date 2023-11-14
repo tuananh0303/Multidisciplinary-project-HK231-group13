@@ -1,16 +1,16 @@
 import { Button, TextField } from '@mui/material';
-import styles from './Login.scss';
-import classNames from 'classnames/bind';
 import Checkbox from '@mui/material/Checkbox';
+import classNames from 'classnames/bind';
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
+import styles from './Login.scss';
 
 const cx = classNames.bind(styles);
 function Login() {
-    const [username, setUsername] = useState('');
+    const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
-    const handleInputUsername = (e) => {
-        return setUsername(e.target.value);
+    const handleInputEmail = (e) => {
+        return setEmail(e.target.value);
     };
     const handleInputPassword = (e) => {
         return setPassword(e.target.value);
@@ -22,12 +22,12 @@ function Login() {
                 <h2 className={cx('title')}> LOG IN</h2>
                 <div className={cx('input')}>
                     <TextField
-                        label="Usename"
+                        label="Email"
                         type="text"
                         fullWidth
                         variant="filled"
                         size="normal"
-                        onChange={handleInputUsername}
+                        onChange={handleInputEmail}
                         sx={
                             ({ input: { fontSize: '1.4rem', padding: '20px 12px 4px' } },
                             {
@@ -35,7 +35,7 @@ function Login() {
                             })
                         }
                     />
-                    {console.log(username)}
+                    {console.log(email)}
                     <TextField
                         label="Password"
                         fullWidth

@@ -1,32 +1,29 @@
 import { Button, TextField } from '@mui/material';
-import styles from './Signup.scss';
 import classNames from 'classnames/bind';
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
+import styles from './Signup.scss';
 
 const cx = classNames.bind(styles);
 function Signup() {
-    const [firstname, setFirstname] = useState('');
-    const [lastname, setLastname] = useState('');
-    const [username, setUsername] = useState('');
-    const [password, setPassword] = useState('');
+    const [fullname, setFullname] = useState('');
     const [email, setEmail] = useState('');
+    const [password, setPassword] = useState('');
+    const [comfirmpassword, setComfirmpassword] = useState('');
     const [phone, setPhone] = useState('');
 
-    const handleInputUsername = (e) => {
-        setUsername(e.target.value);
-    };
-    const handleInputFirstname = (e) => {
-        setFirstname(e.target.value);
-    };
-    const handleInputLastname = (e) => {
-        setLastname(e.target.value);
-    };
-    const handleInputPassword = (e) => {
-        setPassword(e.target.value);
+    const handleInputFullname = (e) => {
+        setFullname(e.target.value);
     };
     const handleInputEmail = (e) => {
         setEmail(e.target.value);
+    };
+    
+    const handleInputPassword = (e) => {
+        setPassword(e.target.value);
+    };
+    const handleInputComfirmpassword = (e) => {
+        setComfirmpassword(e.target.value);
     };
     const handleInputPhone = (e) => {
         setPhone(e.target.value);
@@ -38,38 +35,9 @@ function Signup() {
             <div className={cx('form-signup')}>
                 <h2 className={cx('title')}>SIGN UP</h2>
                 <div className={cx('input')}>
-                    <div className={cx('name')}>
-                        <TextField
-                            label="First Name"
-                            type="text"
-                            variant="filled"
-                            size="normal"
-                            sx={
-                                ({ input: { fontSize: '1.4rem', padding: '20px 12px 4px' } },
-                                {
-                                    '& label': { fontSize: '1.4rem' },
-                                })
-                            }
-                            onChange={handleInputFirstname}
-                        />
-                        {console.log(firstname)}
-                        <TextField
-                            label="Last Name"
-                            type="text"
-                            variant="filled"
-                            size="normal"
-                            sx={
-                                ({ input: { fontSize: '1.4rem', padding: '20px 12px 4px' } },
-                                {
-                                    '& label': { fontSize: '1.4rem' },
-                                })
-                            }
-                            onChange={handleInputLastname}
-                        />
-                        {console.log(lastname)}
-                    </div>
+                    
                     <TextField
-                        label="Username"
+                        label="Fullname"
                         fullWidth
                         type="text"
                         variant="filled"
@@ -83,9 +51,27 @@ function Signup() {
                         InputLabelProps={{
                             style: { fontSize: 14 }, // Set font size here
                         }}
-                        onChange={handleInputUsername}
+                        onChange={handleInputFullname}
                     />
-                    {console.log(username)}
+                    {console.log(fullname)}
+                    <TextField
+                        label="Email"
+                        fullWidth
+                        type="email"
+                        variant="filled"
+                        size="normal"
+                        sx={
+                            ({ input: { fontSize: '1.4rem', padding: '20px 12px 4px' } },
+                            {
+                                marginTop: 2,
+                            })
+                        }
+                        InputLabelProps={{
+                            style: { fontSize: 14 }, // Set font size here
+                        }}
+                        onChange={handleInputEmail}
+                    />
+                        {console.log(email)}
                     <TextField
                         label="Password"
                         fullWidth
@@ -104,24 +90,24 @@ function Signup() {
                         onChange={handleInputPassword}
                     />
                     {console.log(password)}
-                    <TextField
-                        label="Email"
-                        fullWidth
-                        type="email"
-                        variant="filled"
-                        size="normal"
-                        sx={
-                            ({ input: { fontSize: '1.4rem', padding: '20px 12px 4px' } },
-                            {
-                                marginTop: 2,
-                            })
-                        }
-                        InputLabelProps={{
-                            style: { fontSize: 14 }, // Set font size here
-                        }}
-                        onChange={handleInputEmail}
-                    />
-                    {console.log(email)}
+                        <TextField
+                            label="Comfirm Password"
+                            fullWidth
+                            type="password"
+                            variant="filled"
+                            size="normal"
+                            sx={
+                                ({ input: { fontSize: '1.4rem', padding: '20px 12px 4px' } },
+                                {
+                                    marginTop: 2,
+                                })
+                            }
+                            InputLabelProps={{
+                                style: { fontSize: 14 }, // Set font size here
+                            }}
+                            onChange={handleInputComfirmpassword}
+                        />
+                        {console.log(comfirmpassword)}
                     <TextField
                         label="Phone"
                         fullWidth
