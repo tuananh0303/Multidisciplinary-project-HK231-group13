@@ -1,4 +1,4 @@
-import { Button, Flex, Space, Switch, Typography, Progress, Slider, Tooltip, Modal, Input } from 'antd';
+import { Button, Flex, Space, Switch, Typography, Slider, Modal, Input, ConfigProvider } from 'antd';
 import { React, useEffect, useState } from 'react';
 import NotificationsActiveIcon from '@mui/icons-material/NotificationsActive';
 import AddIcon from '@mui/icons-material/Add';
@@ -144,10 +144,20 @@ const DashBoardContent = () => {
                         } else {
                             icon = <BedIcon />;
                         }
+                        let colorRoom;
+                        let colorFont;
+                        if (room.roomId === r.roomId) {
+                            colorRoom = '#F5C525';
+                            colorFont = 'white';
+                        } else {
+                            colorRoom = '#f2f0f0';
+                            colorFont = 'black';
+                        }
+                        const styleRoom = { height: '70px', backgroundColor: colorRoom, color: colorFont };
                         return (
                             <Button
                                 icon={icon}
-                                style={{ height: '70px', backgroundColor: '#f2f0f0' }}
+                                style={styleRoom}
                                 onClick={() => {
                                     setRoom(r);
                                 }}
@@ -190,6 +200,8 @@ const DashBoardContent = () => {
                         icon = <DoorFrontIcon fontSize="large" style={{ marginLeft: '10%' }} />;
                     }
 
+                    let colorSensor = sensorData.status ? '#3ACBE8' : '#f2f0f0';
+
                     return (
                         <>
                             <Space.Compact
@@ -200,7 +212,7 @@ const DashBoardContent = () => {
                                     border: '2px solid black',
                                     borderRadius: '10px',
                                     padding: '3%',
-                                    backgroundColor: '#f2f0f0',
+                                    backgroundColor: colorSensor,
                                     margin: '4% 10%',
                                     display: 'block',
                                 }}
@@ -226,14 +238,32 @@ const DashBoardContent = () => {
                                     </Flex>
                                 </Space>
                                 <Space style={{ height: '20px', padding: '1%', width: '16vw' }}>
-                                    <Slider
-                                        defaultValue={sensorData.data}
-                                        style={{ display: 'block', width: '13vw', padding: '1%' }}
-                                        Tooltip={{ open: true }}
-                                        onChange={(value) => {
-                                            sensorData.data = value;
+                                    <ConfigProvider
+                                        theme={{
+                                            components: {
+                                                Slider: {
+                                                    handleColor: 'black',
+                                                    trackBg: 'black',
+                                                    trackHoverBg: 'black',
+                                                    dotActiveBorderColor: 'black',
+                                                    handleActiveColor: 'black',
+                                                },
+                                            },
                                         }}
-                                    />
+                                    >
+                                        <Slider
+                                            defaultValue={sensorData.data}
+                                            style={{
+                                                display: 'block',
+                                                width: '13vw',
+                                                padding: '1%',
+                                            }}
+                                            Tooltip={{ open: true }}
+                                            onChange={(value) => {
+                                                sensorData.data = value;
+                                            }}
+                                        />
+                                    </ConfigProvider>
                                 </Space>
                             </Space.Compact>
                             <div style={{ width: '1rem' }}></div>
@@ -286,13 +316,6 @@ const DashBoardContent = () => {
                     <Column {...config} style={{ width: '100%' }} />
                 </Space.Compact>
             </Space>
-            <Button
-                onClick={() => {
-                    console.log(rooms);
-                }}
-            >
-                daskjdhas
-            </Button>
         </div>
     );
 };
