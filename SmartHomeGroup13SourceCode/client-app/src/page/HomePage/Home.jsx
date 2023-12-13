@@ -18,8 +18,8 @@ import {
   WalletOutlined,
   HomeOutlined,
   BulbOutlined,
-  SlackOutlined,
-  TabletOutlined,
+  // SlackOutlined,
+  // TabletOutlined,
   DashboardOutlined,
   CloudOutlined,
 } from "@ant-design/icons";
@@ -32,13 +32,7 @@ import io from "socket.io-client";
 const DashBoardContent = () => {
   const [sensorData, setSensorData] = useState(null);
   const [room, setRoom] = useState(rooms[0]);
-
-  // setupp deviceData
-  // const [deviceData, setDeviceData] = useState(true);
-  // const handleDeviceData = () => {
-  //   setDeviceData(!deviceData);
-  // };
-
+  const [deviceData, setDeviceData] = useState(null);
   useEffect(() => {
     const socket = io("http://localhost:3000"); // Kết nối tới server socket.io
 
@@ -46,13 +40,38 @@ const DashBoardContent = () => {
       console.log("Received sensor data:", data);
       console.log("temperature:", data.temperature);
       setSensorData(data);
-      // Xử lý dữ liệu cảm biến ở đây
     });
 
+    socket.on("deviceData", (data) => {
+      console.log("Received deivce data:", data);
+      // console.log("door:", data.door);
+      const transformedData = {
+        door: data.door === 1 ? true : false,
+        fan: data.fan === 1 ? true : false,
+        lamp: data.lamp === 1 ? true : false,
+      };
+      setDeviceData(transformedData);
+      // Xử lý dữ liệu cảm biến ở đây
+    });
     return () => {
       socket.disconnect(); // Ngắt kết nối khi component unmount
     };
   }, []);
+
+  const handleControl = (controlField, value) => {
+    console.log("checked:", value);
+    const updatedDeviceData = {
+      ...deviceData,
+      [controlField]: value,
+    };
+    setDeviceData(updatedDeviceData);
+    console.log("updateControlData:", updatedDeviceData);
+    const socket = io("http://localhost:3000");
+    socket.emit("controlData", updatedDeviceData);
+  };
+  useEffect(() => {
+    console.log("New device data:", deviceData);
+  }, [deviceData]);
 
   const config = {
     data,
@@ -150,6 +169,13 @@ const DashBoardContent = () => {
       onCancel() {},
     });
   };
+
+  const lampStatus = deviceData && deviceData.lamp ? deviceData.lamp : false;
+  const colorlamp = lampStatus ? "#3ACBE8" : "#f2f0f0";
+  const fanStatus = deviceData && deviceData.fan ? deviceData.fan : false;
+  const colorfan = fanStatus ? "#3ACBE8" : "#f2f0f0";
+  const doorStatus = deviceData && deviceData.door ? deviceData.door : false;
+  const colordoor = doorStatus ? "#3ACBE8" : "#f2f0f0";
 
   return (
     <div style={{ boxSizing: "border-box" }}>
@@ -251,100 +277,223 @@ const DashBoardContent = () => {
           padding: "1%",
           marginTop: "50px",
           marginBottom: "50px",
+          gap: "30px",
         }}
       >
-        {room.device.map((devices) => {
-          let icon;
-          let sensorData = sensor.find((sensors) => {
-            return sensors.Id === devices.sensorID;
-          });
-          if (devices.deviceName === "Light") {
-            icon = (
-              <BulbOutlined fontSize="large" style={{ paddingLeft: "10%" }} />
-            );
-          } else if (devices.deviceName === "Fan") {
-            icon = (
-              <SlackOutlined fontSize="large" style={{ paddingLeft: "10%" }} />
-            );
-          } else {
-            icon = (
-              <TabletOutlined fontSize="large" style={{ paddingLeft: "10%" }} />
-            );
-          }
-
-          let colorSensor = sensorData.status ? "#3ACBE8" : "#f2f0f0";
-
-          return (
-            <>
-              <Space.Compact
+        <Space.Compact
+          direction="vertical"
+          style={{
+            width: "100%",
+            height: "150px",
+            border: "2px solid black",
+            borderRadius: "10px",
+            padding: "3%",
+            // paddingBottom: "3%",
+            backgroundColor: colorlamp,
+            margin: "4% 0%",
+            display: "block",
+          }}
+        >
+          <Space style={{ display: "block", height: "90px" }}>
+            <Flex
+              justify="space-between"
+              align="flex-start"
+              style={{ padding: "1% 1.5%", width: "100%" }}
+            >
+              <Space
                 direction="vertical"
-                style={{
-                  width: "100%",
-                  height: "150px",
-                  border: "2px solid black",
-                  borderRadius: "10px",
-                  padding: "3%",
-                  // paddingBottom: "3%",
-                  backgroundColor: colorSensor,
-                  margin: "4% 0%",
-                  display: "block",
-                }}
+                style={{ fontSize: "15px", fontWeight: "bold" }}
               >
-                <Space style={{ display: "block", height: "90px" }}>
-                  <Flex
-                    justify="space-between"
-                    align="flex-start"
-                    style={{ padding: "1% 1.5%", width: "100%" }}
-                  >
-                    <Space
-                      direction="vertical"
-                      style={{ fontSize: "15px", fontWeight: "bold" }}
-                    >
-                      {icon}
-                      <Typography>{devices.deviceName}</Typography>
-                    </Space>
-                    <Space>
-                      {/* check value của device rồi chuyển hóa sang true|false */}
-                      <Switch
-                      // defaultChecked={deviceData}
-                      // onClick={handleDeviceData()}
-                      />
-                    </Space>
-                  </Flex>
-                </Space>
-                <Space style={{ height: "20px", padding: "1%", width: "16vw" }}>
-                  <ConfigProvider
-                    theme={{
-                      components: {
-                        Slider: {
-                          handleColor: "black",
-                          trackBg: "black",
-                          trackHoverBg: "black",
-                          dotActiveBorderColor: "black",
-                          handleActiveColor: "black",
-                        },
-                      },
-                    }}
-                  >
-                    <Slider
-                      defaultValue={sensorData.data}
-                      style={{
-                        display: "block",
-                        width: "13vw",
-                        padding: "1%",
-                      }}
-                      Tooltip={{ open: true }}
-                      onChange={(value) => {
-                        sensorData.data = value;
-                      }}
-                    />
-                  </ConfigProvider>
-                </Space>
-              </Space.Compact>
-              <div style={{ width: "1rem" }}></div>
-            </>
-          );
-        })}
+                <BulbOutlined fontSize="large" style={{ paddingLeft: "10%" }} />
+                <Typography>Light</Typography>
+              </Space>
+              <Space>
+                {/* check value của device rồi chuyển hóa sang true|false */}
+                {deviceData && (
+                  <Switch
+                    checked={deviceData.lamp}
+                    onChange={(checked) => handleControl("lamp", checked)}
+                  />
+                )}
+              </Space>
+            </Flex>
+          </Space>
+          <Space
+            style={{
+              height: "20px",
+              padding: "1%",
+              width: "16vw",
+              marginTop: "20px",
+            }}
+          >
+            <ConfigProvider
+              theme={{
+                components: {
+                  Slider: {
+                    handleColor: "black",
+                    trackBg: "black",
+                    trackHoverBg: "black",
+                    dotActiveBorderColor: "black",
+                    handleActiveColor: "black",
+                  },
+                },
+              }}
+            >
+              <Slider
+                defaultValue={100}
+                style={{
+                  display: "block",
+                  width: "14vw",
+                  padding: "1%",
+                }}
+                Tooltip={{ open: true }}
+              />
+            </ConfigProvider>
+          </Space>
+        </Space.Compact>
+        <Space.Compact
+          direction="vertical"
+          style={{
+            width: "100%",
+            height: "150px",
+            border: "2px solid black",
+            borderRadius: "10px",
+            padding: "3%",
+            // paddingBottom: "3%",
+            backgroundColor: colordoor,
+            margin: "4% 0%",
+            display: "block",
+          }}
+        >
+          <Space style={{ display: "block", height: "90px" }}>
+            <Flex
+              justify="space-between"
+              align="flex-start"
+              style={{ padding: "1% 1.5%", width: "100%" }}
+            >
+              <Space
+                direction="vertical"
+                style={{ fontSize: "15px", fontWeight: "bold" }}
+              >
+                <BulbOutlined fontSize="large" style={{ paddingLeft: "10%" }} />
+                <Typography>Door</Typography>
+              </Space>
+              <Space>
+                {/* check value của device rồi chuyển hóa sang true|false */}
+                {deviceData && (
+                  <Switch
+                    checked={deviceData.door}
+                    onChange={(checked) => handleControl("door", checked)}
+                  />
+                )}
+              </Space>
+            </Flex>
+          </Space>
+          <Space
+            style={{
+              height: "20px",
+              padding: "1%",
+              width: "16vw",
+              marginTop: "20px",
+            }}
+          >
+            <ConfigProvider
+              theme={{
+                components: {
+                  Slider: {
+                    handleColor: "black",
+                    trackBg: "black",
+                    trackHoverBg: "black",
+                    dotActiveBorderColor: "black",
+                    handleActiveColor: "black",
+                  },
+                },
+              }}
+            >
+              <Slider
+                defaultValue={100}
+                style={{
+                  display: "block",
+                  width: "14vw",
+                  padding: "1%",
+                }}
+                Tooltip={{ open: true }}
+              />
+            </ConfigProvider>
+          </Space>
+        </Space.Compact>
+        <Space.Compact
+          direction="vertical"
+          style={{
+            width: "100%",
+            height: "150px",
+            border: "2px solid black",
+            borderRadius: "10px",
+            padding: "3%",
+            // paddingBottom: "3%",
+            backgroundColor: colorfan,
+            margin: "4% 0%",
+            display: "block",
+          }}
+        >
+          <Space style={{ display: "block", height: "90px" }}>
+            <Flex
+              justify="space-between"
+              align="flex-start"
+              style={{ padding: "1% 1.5%", width: "100%" }}
+            >
+              <Space
+                direction="vertical"
+                style={{ fontSize: "15px", fontWeight: "bold" }}
+              >
+                <BulbOutlined fontSize="large" style={{ paddingLeft: "10%" }} />
+                <Typography>Fan</Typography>
+              </Space>
+              <Space>
+                {/* check value của device rồi chuyển hóa sang true|false */}
+                {deviceData && (
+                  <Switch
+                    checked={deviceData.fan}
+                    onChange={(checked) => handleControl("fan", checked)}
+                  />
+                )}
+              </Space>
+            </Flex>
+          </Space>
+          <Space
+            style={{
+              height: "20px",
+              padding: "1%",
+              width: "16vw",
+              marginTop: "20px",
+            }}
+          >
+            <ConfigProvider
+              theme={{
+                components: {
+                  Slider: {
+                    handleColor: "black",
+                    trackBg: "black",
+                    trackHoverBg: "black",
+                    dotActiveBorderColor: "black",
+                    handleActiveColor: "black",
+                  },
+                },
+              }}
+            >
+              <Slider
+                defaultValue={100}
+                style={{
+                  display: "block",
+                  width: "14vw",
+                  padding: "1%",
+                }}
+                Tooltip={{ open: true }}
+              />
+            </ConfigProvider>
+          </Space>
+        </Space.Compact>
+        {/* <div style={{ width: "1rem" }}></div> */}
       </Space>
       {/* OverView and Chart */}
       <div
