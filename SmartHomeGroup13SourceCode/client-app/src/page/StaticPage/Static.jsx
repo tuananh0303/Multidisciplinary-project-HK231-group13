@@ -9,7 +9,6 @@ const Static = () => {
 
   useEffect(() => {
     const socket = io("http://localhost:3000"); // Kết nối tới server socket.io
-
     socket.on("deviceData", (data) => {
       console.log("Received deivce data:", data);
       // console.log("door:", data.door);
@@ -36,8 +35,8 @@ const Static = () => {
     };
     setDeviceData(updatedDeviceData);
     console.log("updateControlData:", updatedDeviceData);
-    // const socket = io("http://localhost:3000");
-    // socket.emit("controlData", updatedDeviceData);
+    const socket = io("http://localhost:3000");
+    socket.emit("controlData", updatedDeviceData);
   };
   useEffect(() => {
     console.log("New device data:", deviceData);
