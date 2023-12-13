@@ -66,7 +66,7 @@ const FanListLivingroom = ({ navigation }) => {
         <View flexDirection="column">
             <View style={styles.room}>
                 <TouchableOpacity onPress={onHome}>
-                    <Entypo name="chevron-left" color={"white"} size={28} />
+                    <Entypo name="chevron-left" color={"white"} size={30} />
                 </TouchableOpacity>
                 <Text style={styles.baseText}>Living Room</Text>
             </View>

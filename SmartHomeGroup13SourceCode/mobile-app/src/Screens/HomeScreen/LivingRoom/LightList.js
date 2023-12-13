@@ -75,17 +75,6 @@ const LightListLivingroom = ({ navigation }) => {
                         paddingLeft="60%"
                     />
                 </View>
-                {/* <View flexDirection="row">
-                    <Text style={styles.listText}>Light</Text>
-                    <Switch
-                        trackColor={{ false: '#767577', true: '#81b0ff' }}
-                        thumbColor={checked ? '#f5dd4b' : '#f4f3f4'}
-                        onChange={handleChange}
-                        value={checked}
-                        paddingLeft="60%"
-                    />
-                </View> */}
-
             </View>
         </View>
     );
