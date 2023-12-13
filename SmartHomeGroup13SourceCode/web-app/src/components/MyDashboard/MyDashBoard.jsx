@@ -3,14 +3,16 @@ import DashBoardContent from '../../page/User/DashBoardContent/DashBoardContent'
 import SettingContent from '../../page/User/SettingContent/SettingContent';
 import StaticContent from '../../page/User/StaticContent/StaticContent';
 import SupportContent from '../../page/User/SupportContent/SupportContent';
-import React, { useState } from 'react';
+import React from 'react';
 import SpaceDashboardIcon from '@mui/icons-material/SpaceDashboard';
 import EqualizerIcon from '@mui/icons-material/Equalizer';
 import SettingsIcon from '@mui/icons-material/Settings';
 import HeadsetIcon from '@mui/icons-material/Headset';
-import { Avatar, Layout, Menu, Space } from 'antd';
-import avata from '../../assets/img/avata.jpg';
+import { Avatar, Layout, Menu, Space, Button } from 'antd';
+// import avata from '../../assets/img/avata.jpg';
+import smarthome from '../../assets/img/smart-home-logo-free-vector.jpg';
 import ProfileContent from '../../page/User/ProfileContent/ProfileContent';
+import LogoutIcon from '@mui/icons-material/Logout';
 const { Sider, Content } = Layout;
 
 const contentStyle = {
@@ -21,12 +23,12 @@ const contentStyle = {
     width: '80%',
 };
 const siderStyle = {
-    backgroundColor: '#f2f0f0',
+    backgroundColor: '#001628',
     position: 'fixed',
     top: '-8px',
     margin: '0',
     padding: '0',
-    height: '101vh',
+    height: '103vh',
 };
 
 const MyDashBoard = () => {
@@ -48,43 +50,54 @@ const MyDashBoard = () => {
             >
                 <Sider style={siderStyle} width={'18%'}>
                     <div style={{ height: '5%' }}></div>
-                    <Avatar
+                    <Link to={'/MyDashBoard/DashBoard'}>
+                        <Avatar
+                            size={{ xs: 50, sm: 50, md: 50, lg: 50, xl: 100, xxl: 150 }}
+                            src={smarthome}
+                            style={{
+                                margin: '10px auto',
+                                display: 'block',
+                            }}
+                        />
+                    </Link>
+                    {/* <Avatar
                         size={{
-                            xs: 24,
-                            sm: 32,
-                            md: 40,
-                            lg: 64,
-                            xl: 80,
-                            xxl: 100,
+                            xs: 4,
+                            sm: 12,
+                            md: 20,
+                            lg: 44,
+                            xl: 60,
+                            xxl: 80,
                         }}
                         src={avata}
                         style={{
                             margin: '10px auto',
                             display: 'block',
                         }}
-                    />
+                    /> */}
                     <Link to={'/MyDashBoard/Profile'} style={{ ':hover': { textDecoration: 'underline black' } }}>
-                        <a
+                        <p
                             style={{
                                 display: 'block',
                                 textAlign: 'center',
-                                color: '#2F3CBD',
+                                color: 'white',
                                 fontSize: '3rem',
                                 fontWeight: '400',
                             }}
                         >
                             Tuấn Anh
-                        </a>
+                        </p>
                     </Link>
                     <p
                         style={{
                             display: 'block',
                             textAlign: 'center',
+                            color: 'white',
                         }}
                     >
                         Host
                     </p>
-                    <Menu style={{ background: '#f2f0f0' }} defaultSelectedKeys={['1']}>
+                    <Menu theme="dark" defaultSelectedKeys={['1']}>
                         <Menu.Item key={'1'} icon={<SpaceDashboardIcon />}>
                             <Link to={'/MyDashBoard/DashBoard'}>Dashboard</Link>
                         </Menu.Item>
@@ -98,6 +111,23 @@ const MyDashBoard = () => {
                             <Link to={'/MyDashBoard/Support'}>Support</Link>
                         </Menu.Item>
                     </Menu>
+                    <Link to={'/'}>
+                        <Button
+                            style={{
+                                width: '80%',
+                                height: '7%',
+                                borderRadius: '10px',
+                                position: 'absolute',
+                                top: '88%',
+                                left: '10%',
+                                fontWeight: '700',
+                            }}
+                            icon={<LogoutIcon style={{ position: 'absolute', top: '35%', left: '20%' }} />}
+                            compo
+                        >
+                            Logout
+                        </Button>
+                    </Link>
                 </Sider>
                 <Layout>
                     <Content style={contentStyle}>
