@@ -56,6 +56,7 @@ mongoose
         console.log("Client connected");
 
         const datasensor = await getDataFromSensorModel();
+        console.log("datasensor first 1:", datasensor);
         const formatData = {
           temperature: datasensor.temperature,
           humidity: datasensor.humidity,
@@ -63,15 +64,26 @@ mongoose
         };
         socket.emit("sensorData", formatData);
 
-        const datasensorUpdate = await getDataFromSensorModel();
-        setInterval(() => {
+        // error update data trong setInterval. bởi vì nó sẽ cứ data lần đầu tiên thôi do gọi datasensorUpdate bên ngoài nên nó thực hiện
+        // việc gọi dữ liệu từ getDataFromSensorModel lần đầu luôn
+
+        setInterval(async () => {
+          const datasensorUpdate = await getDataFromSensorModel();
+          console.log(
+            "datasensorUPdate cho nhung lan sau 35s/lan:",
+            datasensorUpdate
+          );
           const updateFormatData = {
             temperature: datasensorUpdate.temperature,
             humidity: datasensorUpdate.humidity,
             light: datasensorUpdate.light,
           };
+          console.log(
+            "updateData duoc gui di vao nhung lan sau:",
+            updateFormatData
+          );
           socket.emit("sensorData", updateFormatData);
-        }, 40000);
+        }, 35000);
       });
     });
   })
