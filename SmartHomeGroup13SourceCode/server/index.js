@@ -10,6 +10,7 @@ const socketIO = require("socket.io");
 
 const mqttService = require("./services/MqttService");
 const Sensor = require("./models/SensorModel");
+const Device = require("./models/DeviceModel");
 dotenv.config();
 
 const app = express();
@@ -51,6 +52,9 @@ mongoose
       mqttService.subscribeToTopic(topic);
       mqttService.subscribeToTopic(topic1);
       mqttService.subscribeToTopic(topic2);
+      mqttService.subscribeToTopic(topic3);
+      mqttService.subscribeToTopic(topic4);
+      mqttService.subscribeToTopic(topic5);
 
       io.on("connection", async (socket) => {
         console.log("Client connected");
@@ -69,10 +73,6 @@ mongoose
 
         setInterval(async () => {
           const datasensorUpdate = await getDataFromSensorModel();
-          console.log(
-            "datasensorUPdate cho nhung lan sau 35s/lan:",
-            datasensorUpdate
-          );
           const updateFormatData = {
             temperature: datasensorUpdate.temperature,
             humidity: datasensorUpdate.humidity,
@@ -84,6 +84,19 @@ mongoose
           );
           socket.emit("sensorData", updateFormatData);
         }, 35000);
+
+        const datadevice = await getDataFromDeviceModel();
+        console.log("datadevice:", datadevice);
+        const deviceData = {
+          door: datadevice.door,
+          fan: datadevice.fan,
+          lamp: datadevice.lamp,
+        };
+        socket.emit("deviceData", deviceData);
+
+        socket.on("controlData", async (data) => {
+          console.log("Received control data from client:", data);
+        });
       });
     });
   })
@@ -98,6 +111,16 @@ const getDataFromSensorModel = async () => {
   try {
     const sensorData = await Sensor.findOne().sort({ _id: -1 }).limit(1); // Lấy dữ liệu mới nhất
     return sensorData; // Trả về dữ liệu cảm biến từ cơ sở dữ liệu
+  } catch (error) {
+    console.error("Error getting sensor data:", error);
+    return null;
+  }
+};
+
+const getDataFromDeviceModel = async () => {
+  try {
+    const deviceData = await Device.findOne().sort({ _id: -1 }).limit(1); // Lấy dữ liệu mới nhất
+    return deviceData; // Trả về dữ liệu cảm biến từ cơ sở dữ liệu
   } catch (error) {
     console.error("Error getting sensor data:", error);
     return null;
