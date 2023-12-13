@@ -99,13 +99,6 @@ const BottomBar = () => {
           ),
         }}
       />
-      {/* <Tab.Screen name="Routines" component={RoutineScreen}
-        options={{
-          tabBarLabel: 'Routines',
-          tabBarIcon: ({ color }) => (
-            <MaterialCommunityIcons name="timer-settings" color={color} size={29} />
-          ),
-        }} /> */}
       <Tab.Screen name="SettingTab" component={SettingStackScreen}
         options={{
           tabBarLabel: 'Setting',

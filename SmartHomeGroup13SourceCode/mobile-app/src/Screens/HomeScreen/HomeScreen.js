@@ -24,9 +24,9 @@ const HomeScreen = ({ navigation }) => {
   const onLivingRoom = () => {
     navigation.navigate("Livingroom")
   };
-  const onKitchen = () => {
-    navigation.navigate("Kitchen")
-  };
+  // const onKitchen = () => {
+  //   navigation.navigate("Kitchen")
+  // };
 
 
   const [currentDate, setCurrentDate] = useState('');
@@ -120,7 +120,7 @@ const HomeScreen = ({ navigation }) => {
           </Text>
         </TouchableOpacity>
 
-        <TouchableOpacity onPress={onKitchen} style={[styles.room_container, styles.shadow_outline]}>
+        <TouchableOpacity style={[styles.room_container, styles.shadow_outline]}>
 
           <MaterialIcons name="kitchen" color={"#00d1ff"} size={90} />
           <Text style={styles.room_name}>
@@ -233,6 +233,7 @@ const styles = StyleSheet.create({
   },
   address: {
     color: 'white',
+    fontStyle: 'bold',
     fontSize: 15,
     textAlign: 'center',
     marginTop: 6,
