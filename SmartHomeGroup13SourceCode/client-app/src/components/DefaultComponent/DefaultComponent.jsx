@@ -3,10 +3,6 @@ import MyDashboard from "../MyDashboard/MyDashboard";
 
 const DefaultComponent = ({ children }) => {
   return (
-    // <div>
-    //   <MyDashboard />
-    //   {children}
-    // </div>
     <div style={{ display: "flex" }}>
       <div style={{ width: "20%" }}>
         <MyDashboard />

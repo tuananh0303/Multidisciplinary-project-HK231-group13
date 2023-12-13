@@ -1,9 +1,9 @@
 const mongoose = require("mongoose");
 const sensorSchema = new mongoose.Schema(
   {
-    sensorname: { type: String, required: true },
-    value: { type: Number },
-    room: { type: mongoose.Schema.Types.ObjectId, ref: "Room", required: true },
+    temperature: { type: Number, required: true },
+    humidity: { type: Number, required: true },
+    light: { type: Number, required: true },
   },
   {
     timestamps: true,
