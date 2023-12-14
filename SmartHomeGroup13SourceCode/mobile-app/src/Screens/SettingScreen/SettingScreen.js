@@ -10,7 +10,7 @@ const SettingScreen = ({ navigation }) => {
     { id: 2, icon: "notifications", title: 'Notification', onPress: () => navigation.navigate('Notification') },
     { id: 3, icon: 'account-circle', title: 'Change Password', onPress: () => navigation.navigate('ChangePassword') },
     { id: 4, icon: 'support', title: 'Support', onPress: () => navigation.navigate('Support') },
-    { id: 5, icon: 'power-settings-new', title: 'Sign out', onPress: () => navigation.navigate('SignOut') },
+    { id: 5, icon: 'power-settings-new', title: 'Sign out', onPress: () => navigation.navigate('Login') },
   ]
 
   const [options, setOptions] = useState(data)

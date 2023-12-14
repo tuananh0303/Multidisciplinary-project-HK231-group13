@@ -6,7 +6,8 @@ import Entypo from 'react-native-vector-icons/Entypo';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import HomeScreen from "../HomeScreen";
 import axios from 'axios';
-
+import io from "socket.io-client";
+import SocketIOClient from 'socket.io-client';
 
 const LightListLivingroom = ({ navigation }) => {
     const onHome = () => (
@@ -20,6 +21,8 @@ const LightListLivingroom = ({ navigation }) => {
     const onFanListLivingroom = () => (
         navigation.navigate("FanListLivingroom")
     );
+
+    
 
     const [checked, setChecked] = useState(false);
     const handleChange = (event) => {
@@ -48,6 +51,22 @@ const LightListLivingroom = ({ navigation }) => {
         }
     };
 
+
+    ///Addđ
+    const [sensorData, setSensorData] = useState(null);
+    useEffect(() => {
+        const socket = io("http://10.0.2.2:8080"); // Kết nối tới server socket.io
+        // console.log(socket.data)
+        
+        socket.on("sensorData", (data) => {
+            console.log("Received sensor data:", data);
+            setSensorData(data);
+        });
+
+        return () => {
+        socket.disconnect(); // Ngắt kết nối khi component unmount
+        };
+    }, []);
     return (
         <View flexDirection="column">
             <View style={styles.room}>
@@ -64,7 +83,7 @@ const LightListLivingroom = ({ navigation }) => {
                     <MaterialCommunityIcons name="fan" color={"#bcbcbc"} size={50} />
                 </TouchableOpacity>
             </View>
-            <View style={styles.list}>
+            {/* <View style={styles.list}>
                 <View flexDirection="row">
                     <Text style={styles.listText}>Light</Text>
                     <Switch
@@ -75,6 +94,9 @@ const LightListLivingroom = ({ navigation }) => {
                         paddingLeft="60%"
                     />
                 </View>
+            </View> */}
+            <View>
+                <Text>{sensorData && sensorData.temperature}</Text>
             </View>
         </View>
     );
