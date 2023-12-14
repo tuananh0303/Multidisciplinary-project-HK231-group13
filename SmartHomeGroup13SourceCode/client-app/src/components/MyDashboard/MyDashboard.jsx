@@ -28,10 +28,12 @@ const siderStyle = {
 
 const MyDashBoard = () => {
   const navigate = useNavigate();
+  // const location = useLocation();
   const user = useSelector((state) => state.user);
   const dispatch = useDispatch();
   const [userName, setUserName] = useState("");
   // const [loading, setLoading] = useState(false);
+  const [selectedKey, setSelectedKey] = useState("1");
 
   const handleNavigateLogout = () => {
     handleLogout();
@@ -50,6 +52,42 @@ const MyDashBoard = () => {
     // setLoading(false);
   }, [user?.username]);
 
+  const updateSelectedKey = () => {
+    const pathname = window.location.pathname;
+    let key = "1"; // Mặc định là key của Dashboard
+
+    // Xác định key từ đường dẫn hiện tại
+    switch (pathname) {
+      case "/home":
+        key = "1";
+        break;
+      case "/static":
+        key = "2";
+        break;
+      case "/setting":
+        key = "3";
+        break;
+      case "/support":
+        key = "4";
+        break;
+      default:
+        key = "1";
+        break;
+    }
+
+    // Cập nhật selectedKey từ key xác định được
+    setSelectedKey(key);
+  };
+
+  // Xử lý sự kiện click
+  const handleMenuClick = (key) => {
+    setSelectedKey(key);
+  };
+
+  // Sử dụng useEffect để cập nhật selectedKey khi component mount
+  useEffect(() => {
+    updateSelectedKey();
+  }, []);
   return (
     <Space
       direction="vertical"
@@ -120,17 +158,33 @@ const MyDashBoard = () => {
           >
             Host
           </p>
-          <Menu theme="dark" defaultSelectedKeys={["1"]}>
-            <Menu.Item key={"1"} icon={<HomeOutlined />}>
+          <Menu theme="dark" selectedKeys={[selectedKey]}>
+            <Menu.Item
+              key={"1"}
+              icon={<HomeOutlined />}
+              onClick={() => handleMenuClick("1")}
+            >
               <Link to={"/home"}>Dashboard</Link>
             </Menu.Item>
-            <Menu.Item key={"2"} icon={<BarChartOutlined />}>
+            <Menu.Item
+              key={"2"}
+              icon={<BarChartOutlined />}
+              onClick={() => handleMenuClick("2")}
+            >
               <Link to={"/static"}>Static</Link>
             </Menu.Item>
-            <Menu.Item key={"3"} icon={<SettingOutlined />}>
+            <Menu.Item
+              key={"3"}
+              icon={<SettingOutlined />}
+              onClick={() => handleMenuClick("3")}
+            >
               <Link to={"/setting"}>Setting</Link>
             </Menu.Item>
-            <Menu.Item key={"4"} icon={<WechatOutlined />}>
+            <Menu.Item
+              key={"4"}
+              icon={<WechatOutlined />}
+              onClick={() => handleMenuClick("4")}
+            >
               <Link to={"/support"}>Support</Link>
             </Menu.Item>
           </Menu>

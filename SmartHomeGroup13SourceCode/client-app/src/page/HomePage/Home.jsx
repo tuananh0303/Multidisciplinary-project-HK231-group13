@@ -18,8 +18,8 @@ import {
   WalletOutlined,
   HomeOutlined,
   BulbOutlined,
-  // SlackOutlined,
-  // TabletOutlined,
+  SlackOutlined,
+  TabletOutlined,
   DashboardOutlined,
   CloudOutlined,
 } from "@ant-design/icons";
@@ -375,7 +375,10 @@ const DashBoardContent = () => {
                 direction="vertical"
                 style={{ fontSize: "15px", fontWeight: "bold" }}
               >
-                <BulbOutlined fontSize="large" style={{ paddingLeft: "10%" }} />
+                <TabletOutlined
+                  fontSize="large"
+                  style={{ paddingLeft: "10%" }}
+                />
                 <Typography>Door</Typography>
               </Space>
               <Space>
@@ -446,7 +449,10 @@ const DashBoardContent = () => {
                 direction="vertical"
                 style={{ fontSize: "15px", fontWeight: "bold" }}
               >
-                <BulbOutlined fontSize="large" style={{ paddingLeft: "10%" }} />
+                <SlackOutlined
+                  fontSize="large"
+                  style={{ paddingLeft: "10%" }}
+                />
                 <Typography>Fan</Typography>
               </Space>
               <Space>

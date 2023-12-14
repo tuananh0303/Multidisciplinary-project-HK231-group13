@@ -22,24 +22,6 @@ function App() {
   //   console.log("res", res);
   // };
   const dispatch = useDispatch();
-  // useEffect(() => {
-  //   let storageData = localStorage.getItem("access_token");
-  //   if (storageData && isJsonString(storageData)) {
-  //     storageData = JSON.parse(storageData);
-  //     const decoded = jwt_decode(storageData);
-  //     console.log("decode:", decoded);
-  //     if (decoded?.id) {
-  //       handleGetDetailsUser(decoded?.id, storageData);
-  //     }
-  //   }
-  // }, []);
-  // const handleGetDetailsUser = async (id, token) => {
-  //   try {
-  //     const res = await UserService.getDetailsUser(id, token);
-  //     console.log("res", res);
-  //     dispatch(updateUser({ ...res?.data, access_token: token }));
-  //   } catch (error) {}
-  // };
 
   const [isLoading, setIsLoading] = useState(false);
   const user = useSelector((state) => state.user);

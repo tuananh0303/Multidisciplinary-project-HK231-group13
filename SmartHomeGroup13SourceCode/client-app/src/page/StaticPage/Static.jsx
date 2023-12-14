@@ -1,56 +1,56 @@
 import React, { useEffect, useState } from "react";
-import io from "socket.io-client";
+// import io from "socket.io-client";
 import { Flex, Space, Switch, Typography, Slider, ConfigProvider } from "antd";
 import { BulbOutlined } from "@ant-design/icons";
 const Static = () => {
   // muốn lấy dữ liệu khi đang lắng nghe socket thì cũng như bình thường cập nhật
   // các dữ liệu khi có thay đổi thôi. dùng useState để cập nhật dữ liệu thôi
-  const [deviceData, setDeviceData] = useState(null);
+  // const [deviceData, setDeviceData] = useState(null);
 
-  useEffect(() => {
-    const socket = io("http://localhost:3000"); // Kết nối tới server socket.io
-    socket.on("deviceData", (data) => {
-      console.log("Received deivce data:", data);
-      // console.log("door:", data.door);
-      const transformedData = {
-        door: data.door === 1 ? true : false,
-        fan: data.fan === 1 ? true : false,
-        lamp: data.lamp === 1 ? true : false,
-      };
-      setDeviceData(transformedData);
-      // Xử lý dữ liệu cảm biến ở đây
-    });
+  // useEffect(() => {
+  //   const socket = io("http://localhost:3000"); // Kết nối tới server socket.io
+  //   socket.on("deviceData", (data) => {
+  //     console.log("Received deivce data:", data);
+  //     // console.log("door:", data.door);
+  //     const transformedData = {
+  //       door: data.door === 1 ? true : false,
+  //       fan: data.fan === 1 ? true : false,
+  //       lamp: data.lamp === 1 ? true : false,
+  //     };
+  //     setDeviceData(transformedData);
+  //     // Xử lý dữ liệu cảm biến ở đây
+  //   });
 
-    return () => {
-      socket.disconnect(); // Ngắt kết nối khi component unmount
-    };
-  }, []);
+  //   return () => {
+  //     socket.disconnect(); // Ngắt kết nối khi component unmount
+  //   };
+  // }, []);
 
   // console.log("controlData", controlData);
-  const handleControl = (controlField, value) => {
-    console.log("checked:", value);
-    const updatedDeviceData = {
-      ...deviceData,
-      [controlField]: value,
-    };
-    setDeviceData(updatedDeviceData);
-    console.log("updateControlData:", updatedDeviceData);
-    const socket = io("http://localhost:3000");
-    socket.emit("controlData", updatedDeviceData);
-  };
-  useEffect(() => {
-    console.log("New device data:", deviceData);
-  }, [deviceData]);
+  // const handleControl = (controlField, value) => {
+  //   console.log("checked:", value);
+  //   const updatedDeviceData = {
+  //     ...deviceData,
+  //     [controlField]: value,
+  //   };
+  //   setDeviceData(updatedDeviceData);
+  //   console.log("updateControlData:", updatedDeviceData);
+  //   const socket = io("http://localhost:3000");
+  //   socket.emit("controlData", updatedDeviceData);
+  // };
+  // useEffect(() => {
+  //   console.log("New device data:", deviceData);
+  // }, [deviceData]);
   return (
     <div>
       <h2>Device Data</h2>
-      {deviceData && (
+      {/* {deviceData && (
         <div>
           <p>Door: {deviceData.door.toString()}</p>
           <p>Fan: {deviceData.fan.toString()}</p>
           <p>Light: {deviceData.lamp.toString()}</p>
         </div>
-      )}
+      )} */}
       <Space.Compact
         direction="vertical"
         style={{
@@ -80,12 +80,12 @@ const Static = () => {
             </Space>
             <Space>
               {/* check value của device rồi chuyển hóa sang true|false */}
-              {deviceData && (
+              {/* {deviceData && (
                 <Switch
                   checked={deviceData.lamp}
                   onChange={(checked) => handleControl("lamp", checked)}
                 />
-              )}
+              )} */}
             </Space>
           </Flex>
         </Space>
@@ -144,12 +144,12 @@ const Static = () => {
             </Space>
             <Space>
               {/* check value của device rồi chuyển hóa sang true|false */}
-              {deviceData && (
+              {/* {deviceData && (
                 <Switch
                   checked={deviceData.door}
                   onChange={(checked) => handleControl("door", checked)}
                 />
-              )}
+              )} */}
             </Space>
           </Flex>
         </Space>
@@ -208,12 +208,12 @@ const Static = () => {
             </Space>
             <Space>
               {/* check value của device rồi chuyển hóa sang true|false */}
-              {deviceData && (
+              {/* {deviceData && (
                 <Switch
                   checked={deviceData.fan}
                   onChange={(checked) => handleControl("fan", checked)}
                 />
-              )}
+              )} */}
             </Space>
           </Flex>
         </Space>
