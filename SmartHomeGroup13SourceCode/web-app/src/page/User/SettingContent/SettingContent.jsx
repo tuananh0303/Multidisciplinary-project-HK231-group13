@@ -1,5 +1,6 @@
+import ProfileContent from '../ProfileContent/ProfileContent';
 const SettingContent = () => {
-    return <h1>SettingContent</h1>;
+    return <ProfileContent />;
 };
 
 export default SettingContent;

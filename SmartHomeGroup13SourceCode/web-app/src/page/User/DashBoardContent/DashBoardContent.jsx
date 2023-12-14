@@ -110,6 +110,7 @@ const DashBoardContent = () => {
                 alias: '&deg;C',
             },
         },
+        color: '#7c8fdd',
     };
 
     const [thisDay, setThisDay] = useState(dayjs());

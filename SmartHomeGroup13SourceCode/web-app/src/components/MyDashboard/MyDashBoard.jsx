@@ -105,7 +105,7 @@ const MyDashBoard = () => {
                             <Link to={'/MyDashBoard/Static'}>Static</Link>
                         </Menu.Item>
                         <Menu.Item key={'3'} icon={<SettingsIcon />}>
-                            <Link to={'/MyDashBoard/Setting'}>Setting</Link>
+                            <Link to={'/MyDashBoard/Setting'}>Profile</Link>
                         </Menu.Item>
                         <Menu.Item key={'4'} icon={<HeadsetIcon />}>
                             <Link to={'/MyDashBoard/Support'}>Support</Link>
