@@ -90,20 +90,18 @@ const MyDashBoard = () => {
   }, []);
   return (
     <Space
-      direction="vertical"
+      direction='vertical'
       style={{
         width: "100%",
         margin: "0",
         padding: "0",
         boxSizing: "border-box",
-      }}
-    >
+      }}>
       <Layout
         style={{
           padding: "0",
           margin: "0",
-        }}
-      >
+        }}>
         <Sider style={siderStyle} width={"18%"}>
           <div style={{ height: "5%" }}></div>
           <Link to={"/home"}>
@@ -118,8 +116,7 @@ const MyDashBoard = () => {
           </Link>
           <Link
             to={"/profile"}
-            style={{ ":hover": { textDecoration: "underline black" } }}
-          >
+            style={{ ":hover": { textDecoration: "underline black" } }}>
             {user?.access_token ? (
               <p
                 style={{
@@ -129,8 +126,7 @@ const MyDashBoard = () => {
                   color: "white",
                   fontSize: "1.5rem",
                   fontWeight: "400",
-                }}
-              >
+                }}>
                 {userName}
               </p>
             ) : (
@@ -142,8 +138,7 @@ const MyDashBoard = () => {
                   color: "white",
                   fontSize: "1.5rem",
                   fontWeight: "400",
-                }}
-              >
+                }}>
                 username
               </p>
             )}
@@ -154,16 +149,17 @@ const MyDashBoard = () => {
               textAlign: "center",
               color: "white",
               marginBottom: "20px",
-            }}
-          >
+            }}>
             Host
           </p>
+
           <Menu theme="dark" selectedKeys={[selectedKey]}>
             <Menu.Item
               key={"1"}
               icon={<HomeOutlined />}
               onClick={() => handleMenuClick("1")}
             >
+
               <Link to={"/home"}>Dashboard</Link>
             </Menu.Item>
             <Menu.Item
@@ -173,12 +169,14 @@ const MyDashBoard = () => {
             >
               <Link to={"/static"}>Static</Link>
             </Menu.Item>
+
             <Menu.Item
               key={"3"}
               icon={<SettingOutlined />}
               onClick={() => handleMenuClick("3")}
             >
               <Link to={"/setting"}>Setting</Link>
+
             </Menu.Item>
             <Menu.Item
               key={"4"}
@@ -205,8 +203,7 @@ const MyDashBoard = () => {
               />
             }
             compo
-            onClick={handleNavigateLogout}
-          >
+            onClick={handleNavigateLogout}>
             Logout
           </Button>
         </Sider>

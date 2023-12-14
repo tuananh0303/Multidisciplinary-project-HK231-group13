@@ -1,7 +1,7 @@
 import React from "react";
-
+import Profile from "../ProfilePage/Profile";
 const Setting = () => {
-  return <div>Setting</div>;
+  return <Profile />;
 };
 
 export default Setting;
