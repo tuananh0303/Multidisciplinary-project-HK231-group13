@@ -1,21 +1,12 @@
 import React, { useState, useEffect } from 'react';
-import { StyleSheet, View, Text, Image, TouchableOpacity, TouchableHighlight, ImageBackground } from 'react-native';
+import { StyleSheet, View, Text, Image, TouchableOpacity, ImageBackground } from 'react-native';
 import io from 'socket.io-client';
-import init from 'react_native_mqtt';
-import Paho from 'paho-mqtt';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 
-// init({
-//   size: 10000,
-//   storageBackend: AsyncStorage,
-//   defaultExpires: 1000 * 3600 * 24,
-//   enableCache: true,
-//   reconnect: false,
-//   sync: {}
-// });
+
 
 const HomeScreen = ({ navigation }) => {
 
@@ -24,9 +15,7 @@ const HomeScreen = ({ navigation }) => {
   const onLivingRoom = () => {
     navigation.navigate("Livingroom")
   };
-  // const onKitchen = () => {
-  //   navigation.navigate("Kitchen")
-  // };
+  
 
 
   const [currentDate, setCurrentDate] = useState('');
@@ -53,18 +42,33 @@ const HomeScreen = ({ navigation }) => {
     );
   }, []);
 
-  const [temp, setTemp] = useState("default");
-  const [humi, setHumi] = useState("default");
+  // const [temp, setTemp] = useState("default");
+  // const [humi, setHumi] = useState("default");
 
-  const socket = io.connect('https://smart-home-react.onrender.com:443');
-  socket.on('temperatureUpdate', (temperature) => {
-    console.log(`Temperature updated: ${temperature}`);
-    setTemp(`temperature: ${temperature}`);
-  });
-  socket.on('humidityUpdate', (humidity) => {
-    console.log(`Humidity updated: ${humidity}`);
-    setHumi(`humidity: ${humidity}`);
-  });
+  // const socket = io.connect('https://smart-home-react.onrender.com:443');
+  // socket.on('temperatureUpdate', (temperature) => {
+  //   console.log(`Temperature updated: ${temperature}`);
+  //   setTemp(`temperature: ${temperature}`);
+  // });
+  // socket.on('humidityUpdate', (humidity) => {
+  //   console.log(`Humidity updated: ${humidity}`);
+  //   setHumi(`humidity: ${humidity}`);
+  // });
+
+  const [sensorData, setSensorData] = useState(null);
+  useEffect(() => {
+        const socket = io("http://10.0.2.2:8080"); // Kết nối tới server socket.io
+        // console.log(socket.data)
+        
+        socket.on("sensorData", (data) => {
+            console.log("Received sensor data:", data);
+            setSensorData(data);
+        });
+
+        return () => {
+        socket.disconnect(); // Ngắt kết nối khi component unmount
+        };
+    }, []);
 
   return (
     <View
@@ -92,18 +96,22 @@ const HomeScreen = ({ navigation }) => {
         <Text style={styles.baseText}>Overview</Text>
         <View style={styles.overviewContent}>
           <View style={styles.overviewItemLeft} >
-            <MaterialIcons name="wb-sunny" color={"white"} size={35} />
+
             <Text style={styles.timeText}> {currentTime}</Text>
             <Text style={styles.dateText}> {currentDate}</Text>
           </View>
           <View style={styles.overviewItemRight} >
-            <View display="flex" flexDirection="row" >
+            <View display="flex" flexDirection="row" style={{justifyContent: 'space-between'}}>
               <FontAwesome5 name="temperature-low" color={"white"} size={25} />
-              <Text style={styles.dataText}>{temp + "°C "} </Text>
+              <Text style={styles.dataText}>{sensorData && sensorData.temperature} ℃</Text>
             </View>
-            <View display="flex" flexDirection="row" >
-              <Ionicons name="water-outline" paddingTop="20%" color={"white"} size={25} />
-              <Text style={styles.dataText} paddingTop="20%" >{humi + "%"} </Text>
+            <View display="flex" flexDirection="row" style={{justifyContent: 'space-between'}}>
+              <Ionicons name="water-outline" color={"white"} size={25} />
+              <Text style={styles.dataText}  >{sensorData && sensorData.humidity} %</Text>
+            </View>
+            <View display="flex" flexDirection="row" style={{justifyContent: 'space-between'}}>
+              <MaterialIcons name="wb-sunny" color={"white"} size={25} />
+              <Text style={styles.dataText}  >{sensorData && sensorData.light} %</Text>
             </View>
           </View>
         </View>
@@ -191,8 +199,6 @@ const styles = StyleSheet.create({
     alignItems: "center",
     flexDirection: "column",
     width: "40%",
-    // height: "30%",
-    // borderWidth: 1,
     borderRadius: 20
   },
   shadow_outline: {

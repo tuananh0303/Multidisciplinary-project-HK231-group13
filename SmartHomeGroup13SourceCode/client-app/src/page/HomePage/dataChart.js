@@ -27,10 +27,6 @@ export const data = [
     type: "ngay 7",
     sales: 26,
   },
-  {
-    type: "ngay 8",
-    sales: 25,
-  },
 ];
 
 export const rooms = [
@@ -38,26 +34,27 @@ export const rooms = [
     roomId: "1",
     roomName: "Living room",
     device: [
-      { deviceId: "1", deviceName: "light", sensorID: "light-1" },
-      { deviceId: "2", deviceName: "fan", sensorID: "fan-1" },
-      { deviceId: "3", deviceName: "door", sensorID: "door-1" },
+      { deviceId: "1", deviceName: "Light", sensorID: "light-1" },
+      { deviceId: "2", deviceName: "Fan", sensorID: "fan-1" },
+      { deviceId: "3", deviceName: "Door", sensorID: "door-1" },
     ],
   },
   {
     roomId: "2",
     roomName: "Kitchen",
     device: [
-      { deviceId: "1", deviceName: "light", sensorID: "light-1" },
-      { deviceId: "2", deviceName: "fan", sensorID: "fan-1" },
-      { deviceId: "3", deviceName: "door", sensorID: "door-1" },
+      { deviceId: "1", deviceName: "Light", sensorID: "light-1" },
+      { deviceId: "2", deviceName: "Fan", sensorID: "fan-1" },
+      { deviceId: "3", deviceName: "Door", sensorID: "door-1" },
     ],
   },
   {
     roomId: "3",
     roomName: "Bedroom",
     device: [
-      { deviceId: "1", deviceName: "light", sensorID: "light-1" },
-      { deviceId: "2", deviceName: "fan", sensorID: "fan-1" },
+      { deviceId: "1", deviceName: "Light", sensorID: "light-1" },
+      { deviceId: "2", deviceName: "Fan", sensorID: "fan-1" },
+      { deviceId: "3", deviceName: "Door", sensorID: "door-1" },
     ],
   },
 ];
@@ -65,22 +62,17 @@ export const rooms = [
 export const sensor = [
   {
     Id: "light-1",
-    status: true,
-    data: 60,
-  },
-  {
-    Id: "fan-1",
-    status: false,
-    data: 0,
-  },
-  {
-    Id: "door-1",
-    status: true,
+    // status: true,
     data: 100,
   },
   {
-    Id: "door-2",
-    status: false,
-    data: 0,
+    Id: "fan-1",
+    // status: false,
+    data: 100,
+  },
+  {
+    Id: "door-1",
+    // status: true,
+    data: 100,
   },
 ];

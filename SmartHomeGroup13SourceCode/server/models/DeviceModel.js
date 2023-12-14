@@ -1,9 +1,9 @@
 const mongoose = require("mongoose");
 const deviceSchema = new mongoose.Schema(
   {
-    door: { type: Boolean, default: false },
-    fan: { type: Boolean, default: false },
-    lamp: { type: Boolean, default: false },
+    door: { type: Number, require: true },
+    fan: { type: Number, require: true },
+    lamp: { type: Number, require: true },
   },
   {
     timestamps: true,

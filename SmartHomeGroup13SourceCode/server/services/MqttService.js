@@ -1,5 +1,7 @@
 const mqtt = require("mqtt");
 const Sensor = require("../models/SensorModel");
+const Device = require("../models/DeviceModel");
+
 let mqttClient = null;
 const subscribedTopics = [];
 
@@ -16,7 +18,8 @@ const connectMqtt = () => {
   mqttClient.on("message", (topic, message) => {
     // console.log(`Received message on topic ${topic}: ${message.toString()}`);
     // Xử lý tin nhắn nhận được
-    handleMessage(topic, message);
+    handleMessageSensor(topic, message);
+    handleMessageDevice(topic, message);
   });
 };
 
@@ -52,7 +55,7 @@ const publishToTopic = (topic, data) => {
   });
 };
 // Các hàm khác như publish, unsubscribe có thể được thêm vào đây
-const handleMessage = (topic, message) => {
+const handleMessageSensor = (topic, message) => {
   console.log(`Received message on topic ${topic}: ${message.toString()}`);
   // Xử lý tin nhắn nhận được và cập nhật dữ liệu
   const data = JSON.parse(message.toString());
@@ -80,6 +83,41 @@ const handleMessage = (topic, message) => {
         console.error("Error updating data in SensorModel:", err);
       } else {
         console.log("Data updated in SensorModel:", result);
+        // Cập nhật giao diện người dùng hoặc thực hiện các tác vụ khác ở đây nếu cần
+      }
+    }
+  );
+  // Hoặc gửi dữ liệu tới giao diện người dùng
+};
+
+const handleMessageDevice = (topic, message) => {
+  console.log(`Received message on topic ${topic}: ${message.toString()}`);
+  // Xử lý tin nhắn nhận được và cập nhật dữ liệu
+  const data = JSON.parse(message.toString());
+  let fieldToUpdate;
+  switch (topic) {
+    case "khoitruong9802/feeds/control-door":
+      fieldToUpdate = "door";
+      break;
+    case "khoitruong9802/feeds/control-fan":
+      fieldToUpdate = "fan";
+      break;
+    case "khoitruong9802/feeds/control-lamp":
+      fieldToUpdate = "lamp";
+      break;
+    default:
+      console.log("Unknown topic:", topic);
+      return;
+  }
+  Device.findOneAndUpdate(
+    {},
+    { $set: { [fieldToUpdate]: data } },
+    { upsert: true, new: true },
+    (err, result) => {
+      if (err) {
+        console.error("Error updating data in DeviceModel:", err);
+      } else {
+        console.log("Data updated in DeviceModel:", result);
         // Cập nhật giao diện người dùng hoặc thực hiện các tác vụ khác ở đây nếu cần
       }
     }

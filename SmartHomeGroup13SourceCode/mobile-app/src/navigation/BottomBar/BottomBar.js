@@ -17,12 +17,10 @@ import LightListLivingroom from '../../Screens/HomeScreen/LivingRoom/LightList';
 import FanListLivingroom from '../../Screens/HomeScreen/LivingRoom/FanList';
 
 
-//kitchen
-import LightListKitchen from '../../Screens/HomeScreen/Kitchen/LightList';
-import FanListKitchen from '../../Screens/HomeScreen/Kitchen/FanList';
 
 //EditProfile
 import EditProfileScreen from '../../Screens/SettingScreen/EditProfileScreen';
+import DoorListLivingroom from '../../Screens/HomeScreen/LivingRoom/DoorList';
 
 
 //Livingroom
@@ -32,17 +30,8 @@ export const LivingroomStackScreen = () => (
   <LivingroomStack.Navigator screenOptions={{ headerShown: false }}>
     <LivingroomStack.Screen name="LightListLivingroom" component={LightListLivingroom} />
     <LivingroomStack.Screen name="FanListLivingroom" component={FanListLivingroom} />
+    <LivingroomStack.Screen name="DoorListLivingroom" component={DoorListLivingroom} />
   </LivingroomStack.Navigator>
-);
-
-//Kitchen
-const KitchenStack = createStackNavigator();
-
-export const KitchenStackScreen = () => (
-  <KitchenStack.Navigator screenOptions={{ headerShown: false }}>
-    <KitchenStack.Screen name="LightListKitchen" component={LightListKitchen} />
-    <KitchenStack.Screen name="FanListKitchen" component={FanListKitchen} />
-  </KitchenStack.Navigator>
 );
 
 
@@ -58,7 +47,6 @@ export const HomeStackScreen = () => (
   >
     <HomeStack.Screen name="Home" component={HomeScreen} />
     <HomeStack.Screen name="Livingroom" component={LivingroomStackScreen} />
-    <HomeStack.Screen name="Kitchen" component={KitchenStackScreen} />
   </HomeStack.Navigator>
 );
 

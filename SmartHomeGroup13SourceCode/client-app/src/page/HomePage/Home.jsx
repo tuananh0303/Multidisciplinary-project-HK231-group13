@@ -18,8 +18,8 @@ import {
   WalletOutlined,
   HomeOutlined,
   BulbOutlined,
-  SlackOutlined,
-  TabletOutlined,
+  // SlackOutlined,
+  // TabletOutlined,
   DashboardOutlined,
   CloudOutlined,
 } from "@ant-design/icons";
@@ -27,8 +27,85 @@ import { React, useEffect, useState } from "react";
 import { Column } from "@ant-design/plots";
 import dayjs from "dayjs";
 import { data, rooms, sensor } from "./dataChart";
+import io from "socket.io-client";
 
 const DashBoardContent = () => {
+  const [sensorData, setSensorData] = useState(null);
+  const [room, setRoom] = useState(rooms[0]);
+  const [deviceData, setDeviceData] = useState(null);
+  useEffect(() => {
+    const socket = io("http://localhost:3000"); // Kết nối tới server socket.io
+
+    socket.on("sensorData", (data) => {
+      console.log("Received sensor data:", data);
+      console.log("temperature:", data.temperature);
+      setSensorData(data);
+    });
+
+    socket.on("deviceData", (data) => {
+      console.log("Received deivce data:", data);
+      // console.log("door:", data.door);
+      const transformedData = {
+        door: data.door === 1 ? true : false,
+        fan: data.fan === 1 ? true : false,
+        lamp: data.lamp === 1 ? true : false,
+      };
+      setDeviceData(transformedData);
+      // Xử lý dữ liệu cảm biến ở đây
+    });
+    return () => {
+      socket.disconnect(); // Ngắt kết nối khi component unmount
+    };
+  }, []);
+
+  const handleControl = (controlField, value) => {
+    console.log("checked:", value);
+    const updatedDeviceData = {
+      ...deviceData,
+      [controlField]: value,
+    };
+    setDeviceData(updatedDeviceData);
+    console.log("updateControlData:", updatedDeviceData);
+    const socket = io("http://localhost:3000");
+    socket.emit("controlData", updatedDeviceData);
+  };
+  useEffect(() => {
+    console.log("New device data:", deviceData);
+  }, [deviceData]);
+
+  const config = {
+    data,
+    xField: "type",
+    yField: "sales",
+    label: {
+      position: "middle",
+      style: {
+        fill: "#FFFFFF",
+        opacity: 0.6,
+      },
+    },
+    xAxis: {
+      label: {
+        autoHide: true,
+        autoRotate: false,
+      },
+    },
+    meta: {
+      type: {
+        alias: "&deg;C",
+      },
+      sales: {
+        alias: "&deg;C",
+      },
+    },
+  };
+
+  const [thisDay, setThisDay] = useState(dayjs());
+
+  setInterval(() => {
+    setThisDay(dayjs());
+  }, 1000);
+
   let valueSensorId = "";
   let valueDeviceName = "";
   const AddDevice = () => {
@@ -44,14 +121,6 @@ const DashBoardContent = () => {
             }}
             style={{ margin: "2%" }}
           />
-          <br />
-          <Input
-            placeholder="SensorId"
-            onChange={(e) => {
-              valueSensorId = e.target.value;
-            }}
-            style={{ margin: "2%" }}
-          />
         </div>
       ),
       onOk() {
@@ -60,7 +129,7 @@ const DashBoardContent = () => {
             return dataSensor0 === valueSensorId;
           })
         ) {
-          sensor.push({ Id: valueSensorId, status: false, value: 0 });
+          sensor.push({ Id: valueSensorId, status: false, value: 100 });
         }
         // Nếu sau này phát triển ko có sensor ID thì có thể đưa việc add nó vào room thất bại thì nó sẽ ko bị lỗi nữa :))))
         room.device.push({
@@ -100,50 +169,24 @@ const DashBoardContent = () => {
       onCancel() {},
     });
   };
-  const temperature = 32;
-  const humidity = 1.2;
-  const config = {
-    data,
-    xField: "type",
-    yField: "sales",
-    label: {
-      position: "middle",
-      style: {
-        fill: "#FFFFFF",
-        opacity: 0.6,
-      },
-    },
-    xAxis: {
-      label: {
-        autoHide: true,
-        autoRotate: false,
-      },
-    },
-    meta: {
-      type: {
-        alias: "&deg;C",
-      },
-      sales: {
-        alias: "&deg;C",
-      },
-    },
-  };
 
-  const [thisDay, setThisDay] = useState(dayjs());
-
-  setInterval(() => {
-    setThisDay(dayjs());
-  }, 1000);
-
-  useEffect(() => {}, []);
-
-  const [room, setRoom] = useState(rooms[0]);
+  const lampStatus = deviceData && deviceData.lamp ? deviceData.lamp : false;
+  const colorlamp = lampStatus ? "#3ACBE8" : "#f2f0f0";
+  const fanStatus = deviceData && deviceData.fan ? deviceData.fan : false;
+  const colorfan = fanStatus ? "#3ACBE8" : "#f2f0f0";
+  const doorStatus = deviceData && deviceData.door ? deviceData.door : false;
+  const colordoor = doorStatus ? "#3ACBE8" : "#f2f0f0";
 
   return (
     <div style={{ boxSizing: "border-box" }}>
       {/* Notify */}
       <Flex
-        style={{ width: "100%", paddingRight: "4em", padding: "1%" }}
+        style={{
+          width: "100%",
+          paddingRight: "30px",
+          paddingTop: "15px",
+          marginBottom: "20px",
+        }}
         justify={"flex-end"}
         align={"flex-start"}
       >
@@ -152,7 +195,7 @@ const DashBoardContent = () => {
       {/* Room List and Button add */}
       <Flex
         justify="space-between"
-        align="flex-end"
+        align="center"
         style={{ width: "100%", padding: "1%", height: "120px" }}
       >
         <Space
@@ -160,7 +203,7 @@ const DashBoardContent = () => {
             border: "2px solid black",
             borderRadius: "10px",
             height: "100%",
-            padding: "7px",
+            padding: "5px 10px",
           }}
         >
           {rooms.map((r) => {
@@ -182,9 +225,11 @@ const DashBoardContent = () => {
               colorFont = "black";
             }
             const styleRoom = {
-              height: "70px",
+              height: "90px",
               backgroundColor: colorRoom,
               color: colorFont,
+              width: "160px",
+              fontSize: "17px",
             };
             return (
               <Button
@@ -225,157 +270,316 @@ const DashBoardContent = () => {
         </Space>
       </Flex>
       {/* Device list */}
-      <Typography style={{ fontWeight: "500", margin: "0" }}>
-        {room.roomName}
-      </Typography>
-      <Space wrap style={{ width: "100%", padding: "1%", marginTop: "2%" }}>
-        {room.device.map((devices) => {
-          let icon;
-          let sensorData = sensor.find((sensors) => {
-            return sensors.Id === devices.sensorID;
-          });
-          if (devices.deviceName === "light") {
-            icon = (
-              <BulbOutlined fontSize="large" style={{ marginLeft: "10%" }} />
-            );
-          } else if (devices.deviceName === "fan") {
-            icon = (
-              <SlackOutlined fontSize="large" style={{ marginLeft: "10%" }} />
-            );
-          } else {
-            icon = (
-              <TabletOutlined fontSize="large" style={{ marginLeft: "10%" }} />
-            );
-          }
-
-          let colorSensor = sensorData.status ? "#3ACBE8" : "#f2f0f0";
-
-          return (
-            <>
-              <Space.Compact
-                direction="vertical"
-                style={{
-                  width: "100%",
-                  height: "150px",
-                  border: "2px solid black",
-                  borderRadius: "10px",
-                  padding: "3%",
-                  backgroundColor: colorSensor,
-                  margin: "4% 10%",
-                  display: "block",
-                }}
-              >
-                <Space style={{ display: "block", height: "90px" }}>
-                  <Flex
-                    justify="space-between"
-                    align="flex-center"
-                    style={{ padding: "1%", width: "100%" }}
-                  >
-                    <Space direction="vertical">
-                      {icon}
-                      <Typography>{devices.deviceName}</Typography>
-                    </Space>
-                    <Space>
-                      <Switch
-                        defaultChecked={sensorData.status}
-                        onClick={(checked, event) => {
-                          sensorData.status = !sensorData.status;
-                        }}
-                      />
-                    </Space>
-                  </Flex>
-                </Space>
-                <Space style={{ height: "20px", padding: "1%", width: "16vw" }}>
-                  <ConfigProvider
-                    theme={{
-                      components: {
-                        Slider: {
-                          handleColor: "black",
-                          trackBg: "black",
-                          trackHoverBg: "black",
-                          dotActiveBorderColor: "black",
-                          handleActiveColor: "black",
-                        },
-                      },
-                    }}
-                  >
-                    <Slider
-                      defaultValue={sensorData.data}
-                      style={{
-                        display: "block",
-                        width: "13vw",
-                        padding: "1%",
-                      }}
-                      Tooltip={{ open: true }}
-                      onChange={(value) => {
-                        sensorData.data = value;
-                      }}
-                    />
-                  </ConfigProvider>
-                </Space>
-              </Space.Compact>
-              <div style={{ width: "1rem" }}></div>
-            </>
-          );
-        })}
-      </Space>
-      {/* OverView and Chart */}
-      <Space wrap style={{ marginTop: "1%", width: "100%" }}>
+      <Space
+        wrap
+        style={{
+          width: "100%",
+          padding: "1%",
+          marginTop: "50px",
+          marginBottom: "50px",
+          gap: "30px",
+        }}
+      >
         <Space.Compact
           direction="vertical"
           style={{
+            width: "100%",
+            height: "150px",
+            border: "2px solid black",
+            borderRadius: "10px",
+            padding: "3%",
+            // paddingBottom: "3%",
+            backgroundColor: colorlamp,
+            margin: "4% 0%",
+            display: "block",
+          }}
+        >
+          <Space style={{ display: "block", height: "90px" }}>
+            <Flex
+              justify="space-between"
+              align="flex-start"
+              style={{ padding: "1% 1.5%", width: "100%" }}
+            >
+              <Space
+                direction="vertical"
+                style={{ fontSize: "15px", fontWeight: "bold" }}
+              >
+                <BulbOutlined fontSize="large" style={{ paddingLeft: "10%" }} />
+                <Typography>Light</Typography>
+              </Space>
+              <Space>
+                {/* check value của device rồi chuyển hóa sang true|false */}
+                {deviceData && (
+                  <Switch
+                    checked={deviceData.lamp}
+                    onChange={(checked) => handleControl("lamp", checked)}
+                  />
+                )}
+              </Space>
+            </Flex>
+          </Space>
+          <Space
+            style={{
+              height: "20px",
+              padding: "1%",
+              width: "16vw",
+              marginTop: "20px",
+            }}
+          >
+            <ConfigProvider
+              theme={{
+                components: {
+                  Slider: {
+                    handleColor: "black",
+                    trackBg: "black",
+                    trackHoverBg: "black",
+                    dotActiveBorderColor: "black",
+                    handleActiveColor: "black",
+                  },
+                },
+              }}
+            >
+              <Slider
+                defaultValue={100}
+                style={{
+                  display: "block",
+                  width: "14vw",
+                  padding: "1%",
+                }}
+                Tooltip={{ open: true }}
+              />
+            </ConfigProvider>
+          </Space>
+        </Space.Compact>
+        <Space.Compact
+          direction="vertical"
+          style={{
+            width: "100%",
+            height: "150px",
+            border: "2px solid black",
+            borderRadius: "10px",
+            padding: "3%",
+            // paddingBottom: "3%",
+            backgroundColor: colordoor,
+            margin: "4% 0%",
+            display: "block",
+          }}
+        >
+          <Space style={{ display: "block", height: "90px" }}>
+            <Flex
+              justify="space-between"
+              align="flex-start"
+              style={{ padding: "1% 1.5%", width: "100%" }}
+            >
+              <Space
+                direction="vertical"
+                style={{ fontSize: "15px", fontWeight: "bold" }}
+              >
+                <BulbOutlined fontSize="large" style={{ paddingLeft: "10%" }} />
+                <Typography>Door</Typography>
+              </Space>
+              <Space>
+                {/* check value của device rồi chuyển hóa sang true|false */}
+                {deviceData && (
+                  <Switch
+                    checked={deviceData.door}
+                    onChange={(checked) => handleControl("door", checked)}
+                  />
+                )}
+              </Space>
+            </Flex>
+          </Space>
+          <Space
+            style={{
+              height: "20px",
+              padding: "1%",
+              width: "16vw",
+              marginTop: "20px",
+            }}
+          >
+            <ConfigProvider
+              theme={{
+                components: {
+                  Slider: {
+                    handleColor: "black",
+                    trackBg: "black",
+                    trackHoverBg: "black",
+                    dotActiveBorderColor: "black",
+                    handleActiveColor: "black",
+                  },
+                },
+              }}
+            >
+              <Slider
+                defaultValue={100}
+                style={{
+                  display: "block",
+                  width: "14vw",
+                  padding: "1%",
+                }}
+                Tooltip={{ open: true }}
+              />
+            </ConfigProvider>
+          </Space>
+        </Space.Compact>
+        <Space.Compact
+          direction="vertical"
+          style={{
+            width: "100%",
+            height: "150px",
+            border: "2px solid black",
+            borderRadius: "10px",
+            padding: "3%",
+            // paddingBottom: "3%",
+            backgroundColor: colorfan,
+            margin: "4% 0%",
+            display: "block",
+          }}
+        >
+          <Space style={{ display: "block", height: "90px" }}>
+            <Flex
+              justify="space-between"
+              align="flex-start"
+              style={{ padding: "1% 1.5%", width: "100%" }}
+            >
+              <Space
+                direction="vertical"
+                style={{ fontSize: "15px", fontWeight: "bold" }}
+              >
+                <BulbOutlined fontSize="large" style={{ paddingLeft: "10%" }} />
+                <Typography>Fan</Typography>
+              </Space>
+              <Space>
+                {/* check value của device rồi chuyển hóa sang true|false */}
+                {deviceData && (
+                  <Switch
+                    checked={deviceData.fan}
+                    onChange={(checked) => handleControl("fan", checked)}
+                  />
+                )}
+              </Space>
+            </Flex>
+          </Space>
+          <Space
+            style={{
+              height: "20px",
+              padding: "1%",
+              width: "16vw",
+              marginTop: "20px",
+            }}
+          >
+            <ConfigProvider
+              theme={{
+                components: {
+                  Slider: {
+                    handleColor: "black",
+                    trackBg: "black",
+                    trackHoverBg: "black",
+                    dotActiveBorderColor: "black",
+                    handleActiveColor: "black",
+                  },
+                },
+              }}
+            >
+              <Slider
+                defaultValue={100}
+                style={{
+                  display: "block",
+                  width: "14vw",
+                  padding: "1%",
+                }}
+                Tooltip={{ open: true }}
+              />
+            </ConfigProvider>
+          </Space>
+        </Space.Compact>
+        {/* <div style={{ width: "1rem" }}></div> */}
+      </Space>
+      {/* OverView and Chart */}
+      <div
+        style={{ marginTop: "1%", width: "100%", display: "flex", gap: "10px" }}
+      >
+        <div
+          // direction="vertical"
+          style={{
             height: "50vh",
-            width: "26vw",
+            width: "27%",
             backgroundColor: "#f2f0f0",
-            padding: "5%",
+            padding: "1% 2%",
             borderRadius: "10px",
           }}
         >
           <Typography
-            style={{ fontWeight: "700", display: "block", width: "100%" }}
+            style={{
+              fontWeight: "bold",
+              display: "block",
+              width: "100%",
+              fontSize: "2rem",
+            }}
           >
             Overview
           </Typography>
           <Typography
-            style={{ fontSize: "7rem", fontWeight: "400", marginTop: "8%" }}
+            style={{ fontSize: "1.5rem", fontWeight: "400", marginTop: "8%" }}
           >
-            {thisDay.format("HH:mm:ss")}
+            O'clock: {thisDay.format("HH:mm:ss")}
           </Typography>
-          <Typography style={{ fontWeight: "500", marginTop: "5%" }}>
-            {thisDay.format("DD/MM/YYYY")}
-          </Typography>
-          <Flex
-            justify="space-between"
-            align="center"
-            style={{ padding: "10%" }}
+          <Typography
+            style={{ fontSize: "1.5rem", fontWeight: "400", marginTop: "3%" }}
           >
-            <Space>
-              <DashboardOutlined fontSize="large" />
-              <Typography style={{ fontSize: "1.5rem", fontWeight: "500" }}>
-                {temperature}&deg;C
-              </Typography>
-            </Space>
-            <Space>
-              <CloudOutlined fontSize="large" />
-              <Typography style={{ fontSize: "1.5rem", fontWeight: "500" }}>
-                {humidity}%
-              </Typography>
-            </Space>
-          </Flex>
-        </Space.Compact>
-        <Space.Compact
+            Day: {thisDay.format("DD/MM/YYYY")}
+          </Typography>
+          <div
+            style={{
+              fontSize: "1.5rem",
+              fontWeight: "400",
+              marginTop: "3%",
+              display: "flex",
+              flexDirection: "column",
+              gap: "7px",
+            }}
+          >
+            Data Sensor:
+            {/* sensor */}
+            {sensorData && (
+              <div style={{ display: "flex", gap: "10px", marginLeft: "5px" }}>
+                <DashboardOutlined style={{ fontSize: "1.5rem" }} />
+                <Typography style={{ fontSize: "1.5rem", fontWeight: "500" }}>
+                  : {sensorData.temperature}&deg;C
+                </Typography>
+              </div>
+            )}
+            {sensorData && (
+              <div style={{ display: "flex", gap: "10px", marginLeft: "5px" }}>
+                <BulbOutlined style={{ fontSize: "1.5rem" }} />
+                <Typography style={{ fontSize: "1.5rem", fontWeight: "500" }}>
+                  : {sensorData.light}%
+                </Typography>
+              </div>
+            )}
+            {sensorData && (
+              <div style={{ display: "flex", gap: "10px", marginLeft: "5px" }}>
+                <CloudOutlined style={{ fontSize: "1.5rem" }} />
+                <Typography style={{ fontSize: "1.5rem", fontWeight: "500" }}>
+                  : {sensorData.humidity}%
+                </Typography>
+              </div>
+            )}
+          </div>
+        </div>
+        <div
           style={{
             height: "50vh",
-            width: "50vw",
-            margin: "3%",
+            width: "70%",
+            // margin: "3%",
             backgroundColor: "#f2f0f0",
             borderRadius: "10px",
-            padding: "3%",
+            padding: "1%",
           }}
         >
-          <Column {...config} style={{ width: "100%" }} />
-        </Space.Compact>
-      </Space>
+          <Column {...config} style={{ width: "100%", height: "50vh" }} />
+        </div>
+      </div>
     </div>
   );
 };
