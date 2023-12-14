@@ -3,7 +3,7 @@ import DashBoardContent from '../../page/User/DashBoardContent/DashBoardContent'
 import SettingContent from '../../page/User/SettingContent/SettingContent';
 import StaticContent from '../../page/User/StaticContent/StaticContent';
 import SupportContent from '../../page/User/SupportContent/SupportContent';
-import React from 'react';
+import React, { useState } from 'react';
 import SpaceDashboardIcon from '@mui/icons-material/SpaceDashboard';
 import EqualizerIcon from '@mui/icons-material/Equalizer';
 import SettingsIcon from '@mui/icons-material/Settings';
@@ -32,6 +32,11 @@ const siderStyle = {
 };
 
 const MyDashBoard = () => {
+    const [collapsed, setCollappsed] = useState(false);
+    setInterval(() => {
+        if (window.innerWidth < 1025) setCollappsed(true);
+        else setCollappsed(false);
+    }, 500);
     return (
         <Space
             direction="vertical"
@@ -48,7 +53,7 @@ const MyDashBoard = () => {
                     margin: '0',
                 }}
             >
-                <Sider style={siderStyle} width={'18%'}>
+                <Sider style={siderStyle} width={'18%'} collapsed={collapsed}>
                     <div style={{ height: '5%' }}></div>
                     <Link to={'/MyDashBoard/DashBoard'}>
                         <Avatar
@@ -97,7 +102,7 @@ const MyDashBoard = () => {
                     >
                         Host
                     </p>
-                    <Menu theme="dark" defaultSelectedKeys={['1']}>
+                    <Menu theme="dark" defaultSelectedKeys={['1']} inlineCollapsed={false} mode="inline">
                         <Menu.Item key={'1'} icon={<SpaceDashboardIcon />}>
                             <Link to={'/MyDashBoard/DashBoard'}>Dashboard</Link>
                         </Menu.Item>
@@ -125,7 +130,7 @@ const MyDashBoard = () => {
                             icon={<LogoutIcon style={{ position: 'absolute', top: '35%', left: '20%' }} />}
                             compo
                         >
-                            Logout
+                            {!collapsed ? 'Logout' : ''}
                         </Button>
                     </Link>
                 </Sider>
