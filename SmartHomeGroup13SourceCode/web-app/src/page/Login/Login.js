@@ -1,3 +1,4 @@
+
 // import { Button, TextField } from '@mui/material';
 import Checkbox from '@mui/material/Checkbox';
 import classNames from 'classnames/bind';
@@ -53,6 +54,7 @@ function Login() {
 
     const handleOnchangeEmail = (value) => {
         setEmail(value);
+
     };
 
     const handleOnchangePassword = (value) => {
@@ -73,6 +75,7 @@ function Login() {
             <div className={cx('form')}>
                 <h2 className={cx('title')}> LOG IN</h2>
                 <div className={cx('input')}>
+
                     <InputForm
                         style={{ marginBottom: '20px' }}
                         placeholder="abc@gmail.com"
@@ -100,6 +103,7 @@ function Login() {
                         />
                         {console.log(password)}
                     </div>
+
                 </div>
                 {data?.status === 'ERR' && <span style={{ color: 'red' }}>{data?.message}</span>}
 

@@ -35,6 +35,7 @@ function Signup() {
             <div className={cx('form-signup')}>
                 <h2 className={cx('title')}>SIGN UP</h2>
                 <div className={cx('input')}>
+
                     <TextField
                         label="Fullname"
                         fullWidth
@@ -53,6 +54,8 @@ function Signup() {
                         onChange={handleInputFullname}
                     />
                     {console.log(fullname)}
+
+
                     <TextField
                         label="Email"
                         fullWidth
@@ -70,27 +73,11 @@ function Signup() {
                         }}
                         onChange={handleInputEmail}
                     />
-                    {console.log(email)}
+                        {console.log(email)}
                     <TextField
-                        label="Password"
-                        fullWidth
-                        type="password"
-                        variant="filled"
-                        size="normal"
-                        sx={
-                            ({ input: { fontSize: '1.4rem', padding: '20px 12px 4px' } },
-                            {
-                                marginTop: 2,
-                            })
-                        }
-                        InputLabelProps={{
-                            style: { fontSize: 14 }, // Set font size here
-                        }}
-                        onChange={handleInputPassword}
-                    />
-                    {console.log(password)}
-                    <TextField
+
                         label="Comfirm Password"
+
                         fullWidth
                         type="password"
                         variant="filled"
@@ -104,9 +91,11 @@ function Signup() {
                         InputLabelProps={{
                             style: { fontSize: 14 }, // Set font size here
                         }}
+
                         onChange={handleInputComfirmpassword}
                     />
                     {console.log(comfirmpassword)}
+
                     <TextField
                         label="Phone"
                         fullWidth
